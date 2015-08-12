@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FadeJson
 {
-    public class Visitor
+    class JsonVisitor
     {
         public dynamic VisitJson(JsonParser.JsonContext context) {
             var obj = context.@object();
@@ -22,10 +22,10 @@ namespace FadeJson
             throw new ArgumentException();
         }
 
-        private List<JsonObject> VisitArray(JsonParser.ArrayContext context) {
+        private List<dynamic> VisitArray(JsonParser.ArrayContext context) {
             JsonParser.ValueContext valueContext;
             var i = 0;
-            var list = new List<JsonObject>();
+            var list = new List<dynamic>();
 
             do {
                 valueContext = context.value(i++);
