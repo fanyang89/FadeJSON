@@ -82,6 +82,14 @@ namespace FadeJson
                 return VisitArray(array);
             }
 
+            var b = context.GetText();
+            switch (b) {
+                case "true":
+                    return true;
+                case "false":
+                    return false;
+            }
+
             throw new ArgumentException();
         }
     }
