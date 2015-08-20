@@ -8,6 +8,13 @@ namespace FadeJson
 {
     public class JsonObject
     {
+        /// <summary>
+        /// create an empty instance for JsonObject
+        /// </summary>
+        public JsonObject() {
+            
+        }
+
         private readonly Dictionary<string, dynamic> _dict = new Dictionary<string, dynamic>();
 
         public void AddKeyValue(string key, dynamic value) {

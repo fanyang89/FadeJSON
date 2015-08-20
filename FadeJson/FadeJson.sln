@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FadeJson", "FadeJson.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{3D415F5D-DDFF-4A3F-B368-AF7BE42624E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FadeJson2", "..\FadeJson2\FadeJson2.csproj", "{B4B52BE2-AEC4-4434-9FA4-D8692BD2DC0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FadeJson2Tests", "FadeJson2Tests\FadeJson2Tests.csproj", "{9223352A-854C-4B84-8991-9D4076FFC11C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{3D415F5D-DDFF-4A3F-B368-AF7BE42624E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D415F5D-DDFF-4A3F-B368-AF7BE42624E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D415F5D-DDFF-4A3F-B368-AF7BE42624E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4B52BE2-AEC4-4434-9FA4-D8692BD2DC0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B52BE2-AEC4-4434-9FA4-D8692BD2DC0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B52BE2-AEC4-4434-9FA4-D8692BD2DC0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B52BE2-AEC4-4434-9FA4-D8692BD2DC0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9223352A-854C-4B84-8991-9D4076FFC11C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9223352A-854C-4B84-8991-9D4076FFC11C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9223352A-854C-4B84-8991-9D4076FFC11C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9223352A-854C-4B84-8991-9D4076FFC11C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
