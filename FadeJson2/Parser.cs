@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FadeJson2
 {
@@ -14,9 +15,29 @@ namespace FadeJson2
             _ = new ParseSupporter(lexer);
         }
 
-        public JsonObject Parse() {
-            //TODO let array bacome an entry
-            return ParseJsonObject();
+        public dynamic Parse() {
+            if (_.CheckToken("{")) {
+                return ParseJsonObject();
+            }
+            if (_.CheckToken("[")) {
+                return ParseJsonArray();
+            }
+            throw new FormatException();
+        }
+
+        private List<dynamic> ParseJsonArray() {
+            var result = new List<dynamic>();
+            _.UsingToken("[");
+
+            var value = ParseValue();
+            while (value != null) {
+                result.Add(value);
+                _.UsingToken(",");
+                value = ParseValue();
+            }
+
+            _.UsingToken("]");
+            return result;
         }
 
         private JsonObject ParseJsonObject() {
@@ -39,7 +60,6 @@ namespace FadeJson2
 
         private KeyValuePair<string, dynamic>? ParsePair() {
             var key = string.Empty;
-            KeyValuePair<string, dynamic>? pair = null;
             var isExit = false;
             _.IsExit = new Ref<bool>(() => isExit, v => { isExit = v; });
 
@@ -50,19 +70,36 @@ namespace FadeJson2
 
             _.UsingToken(":");
 
+            var value = ParseValue();
+            if (value == null) {
+                return null;
+            }
+
+            return new KeyValuePair<string, dynamic>(key, value);
+        }
+
+        private dynamic ParseValue() {
+            dynamic result = null;
+            
+            if (_.CheckToken("{")) {
+                result = ParseJsonObject();
+                return result;
+            }
+            if (_.CheckToken("[")) {
+                result = ParseJsonArray();
+                return result;
+            }
+
             _.UsingToken(t => {
                 switch (t.TokenType) {
                     case TokenType.StringType:
                     case TokenType.IntegerType:
-                        pair = new KeyValuePair<string, dynamic>(key, t.RealValue);
+                        result = t.RealValue;
                         return true;
                 }
-                var j = ParseJsonObject();
-                pair = new KeyValuePair<string, dynamic>(key, j);
                 return true;
             });
-
-            return pair;
+            return result;
         }
     }
 }

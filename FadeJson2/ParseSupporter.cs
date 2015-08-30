@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace FadeJson2
@@ -13,14 +12,7 @@ namespace FadeJson2
 
         private readonly Queue<Token> tokenQueue = new Queue<Token>();
 
-        private Token NextToken {
-            get {
-                if (tokenQueue.Count == 0) {
-                    return Lexer.NextToken();
-                }
-                return tokenQueue.Dequeue();
-            }
-        }
+        private Token NextToken => tokenQueue.Count == 0 ? Lexer.NextToken() : tokenQueue.Dequeue();
 
         private void RollbackToken(Token token) {
             tokenQueue.Enqueue(token);
@@ -33,6 +25,10 @@ namespace FadeJson2
         public ParseSupporter UsingToken(UsingTokenDelegate method) {
             if (IsExit.Value) return this;
             var token = NextToken;
+            if (token == null) {
+                IsExit.Value = true;
+                return this;
+            }
             var result = method.Invoke(token);
             if (!result) {
                 RollbackToken(token);
@@ -90,10 +86,28 @@ namespace FadeJson2
         public bool UsingToken(dynamic tokenValue) {
             if (IsExit.Value) return false;
             var token = NextToken;
+            if (token == null) {
+                return false;
+            }
             if (token.Value != tokenValue) {
                 RollbackToken(token);
+                return false;
             }
             return true;
         }
+
+        public bool CheckToken(dynamic tokenValue) {
+            var token = NextToken;
+            if (token == null) {
+                return false;
+            }
+            if (token.Value != tokenValue) {
+                RollbackToken(token);
+                return false;
+            }
+            RollbackToken(token);
+            return true;
+        }
+
     }
 }
