@@ -23,7 +23,7 @@ namespace FadeJson2
                 dict[key] = value;
             }
         }
-
+        
         public static JsonObject FromFile(string filename) {
             var lexer = Lexer.FromFile(filename);
             var parser = new Parser(lexer);

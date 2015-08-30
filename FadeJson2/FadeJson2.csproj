@@ -43,7 +43,9 @@
     <Compile Include="JsonObject.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="ParseSupporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ref.cs" />
     <Compile Include="Token.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

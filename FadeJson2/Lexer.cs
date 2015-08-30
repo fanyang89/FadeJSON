@@ -111,7 +111,7 @@ namespace FadeJson2
 
         private readonly List<char> emptyCharList = new List<char> { ' ', '\r', '\n', '\t' };
 
-        private readonly List<char> keyCharList = new List<char> { '{', '}', ':' };
+        private readonly List<char> keyCharList = new List<char> { '{', '}', ':', ',' };
 
         public Token NextToken() {
             var c = PeekChar();

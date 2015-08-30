@@ -4,7 +4,6 @@ namespace FadeJson2
 {
     public enum TokenType
     {
-        UnkownType,
         IntegerType,
         StringType,
         SyntaxType
@@ -23,6 +22,10 @@ namespace FadeJson2
         public Token(char value, TokenType tokenType) {
             TokenType = tokenType;
             Value = value.ToString();
+        }
+
+        public override string ToString() {
+            return Value;
         }
 
         public dynamic RealValue {

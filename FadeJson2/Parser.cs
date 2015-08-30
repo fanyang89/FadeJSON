@@ -1,95 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace FadeJson2
 {
     public class Parser
     {
-        private Lexer lexer;
+        private readonly ParseSupporter _;
 
-        public Parser(Lexer lexer) {
-            this.lexer = lexer;
+        public Parser(ParseSupporter parseSupporter) {
+            _ = parseSupporter;
         }
 
-        #region Parse Method
+        public Parser(Lexer lexer) {
+            _ = new ParseSupporter(lexer);
+        }
+
         public JsonObject Parse() {
-            //TODO let array bacome a entry
+            //TODO let array bacome an entry
             return ParseJsonObject();
         }
 
         private JsonObject ParseJsonObject() {
             var j = new JsonObject();
-            var token = NextToken;
-            if (token.Value == "{") {
-                var pair = ParsePair();
-                while (pair != null) {
-                    j.AddKeyValue(pair);
-                    pair = ParsePair();
-                }
-                token = NextToken;
-                if (token.Value == "}") {
-                    return j;
-                }
-                RollbackToken(token);
+            var isExit = false;
+            _.IsExit = new Ref<bool>(() => isExit, v => { isExit = v; });
+
+            _.UsingToken("{");
+
+            var pair = ParsePair();
+            while (pair != null) {
+                j.AddKeyValue(pair);
+                _.UsingToken(",");
+                pair = ParsePair();
             }
-            RollbackToken(token);
-            throw new FormatException();
+
+            _.UsingToken("}");
+            return j;
         }
 
         private KeyValuePair<string, dynamic>? ParsePair() {
-            var token = NextToken;
-            if (token.TokenType == TokenType.StringType) {
-                var key = token.Value;
-                token = NextToken;
-                if (token.TokenType == TokenType.SyntaxType && token.Value == ":") {
-                    token = NextToken;
-                    switch (token.TokenType) {
-                        case TokenType.StringType:
-                        case TokenType.IntegerType:
-                            return new KeyValuePair<string, dynamic>(key, token.RealValue);
-                    }
-                    RollbackToken(token);
+            var key = string.Empty;
+            KeyValuePair<string, dynamic>? pair = null;
+            var isExit = false;
+            _.IsExit = new Ref<bool>(() => isExit, v => { isExit = v; });
+
+            _.UsingToken(t => {
+                key = t.Value;
+                return true;
+            }, TokenType.StringType, () => { isExit = true; });
+
+            _.UsingToken(":");
+
+            _.UsingToken(t => {
+                switch (t.TokenType) {
+                    case TokenType.StringType:
+                    case TokenType.IntegerType:
+                        pair = new KeyValuePair<string, dynamic>(key, t.RealValue);
+                        return true;
                 }
-                RollbackToken(token);
-            }
-            RollbackToken(token);
-            return null;
-        }
-        #endregion
-
-        #region Parsing Support
-        public delegate bool UsingTokenDelegate(Token token);
-
-        public void UsingToken(UsingTokenDelegate method) {
-            var token = NextToken;
-            var result = method.Invoke(token);
-            if (!result) {
-                RollbackToken(token);
-            }
-        }
-
-        private void ParseTest() {
-            UsingToken(token => {
+                var j = ParseJsonObject();
+                pair = new KeyValuePair<string, dynamic>(key, j);
                 return true;
             });
-        }
-        #endregion
 
-        #region Token Control
-        private readonly Queue<Token> tokenQueue = new Queue<Token>();
-
-        private Token NextToken {
-            get {
-                if (tokenQueue.Count == 0) {
-                    return lexer.NextToken();
-                }
-                return tokenQueue.Dequeue();
-            }
+            return pair;
         }
-
-        private void RollbackToken(Token token) {
-            tokenQueue.Enqueue(token);
-        }
-        #endregion
     }
 }

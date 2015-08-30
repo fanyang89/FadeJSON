@@ -1,3 +1,8 @@
 ﻿{
-  "name": "fadejson"
+  "name": "fadejson",
+  "age": 18,
+  "like": {
+    "lang": "C#",
+    "keyboard": "Cherry"
+  }
 }
