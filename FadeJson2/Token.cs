@@ -6,7 +6,8 @@ namespace FadeJson2
     {
         IntegerType,
         StringType,
-        SyntaxType
+        SyntaxType,
+        BoolType
     }
 
     public class Token
@@ -36,6 +37,8 @@ namespace FadeJson2
                     case TokenType.StringType:
                     case TokenType.SyntaxType:
                         return Value;
+                    case TokenType.BoolType:
+                        return Value == "true";
                     default:
                         throw new InvalidOperationException("UnkownTypeToken");
                 }

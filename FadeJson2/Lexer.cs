@@ -130,7 +130,51 @@ namespace FadeJson2
             if (c == '"') {
                 return GetStringToken();
             }
+            if (c == 't' || c == 'f') {
+                return GetBoolToken();
+            }
             return null;
+        }
+
+        public Token GetBoolToken() {
+            var c = PeekChar();
+            if (c == 't') {
+                GetChar();
+                c = PeekChar();
+                if (c == 'r') {
+                    GetChar();
+                    c = PeekChar();
+                    if (c == 'u') {
+                        GetChar();
+                        c = PeekChar();
+                        if (c == 'e') {
+                            GetChar();
+                            return new Token("true", TokenType.BoolType);
+                        }
+                    }
+                }
+            }
+            if (c == 'f') {
+                GetChar();
+                c = PeekChar();
+                if (c == 'a') {
+                    GetChar();
+                    c = PeekChar();
+                    if (c == 'l') {
+                        GetChar();
+                        c = PeekChar();
+                        if (c == 's') {
+                            GetChar();
+                            c = PeekChar();
+                            if (c == 'e') {
+                                GetChar();
+                                return new Token("false", TokenType.BoolType);
+                            }
+                        }
+                    }
+                }
+            }
+            throw new NotImplementedException();
         }
 
         public static Lexer FromString(string content) => new Lexer(content);

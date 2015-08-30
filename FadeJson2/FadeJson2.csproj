@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B4B52BE2-AEC4-4434-9FA4-D8692BD2DC0D}</ProjectGuid>
+    <ProjectGuid>{2AFA77C8-517C-4840-9231-8F999D036155}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FadeJson2</RootNamespace>
@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extension.cs" />
     <Compile Include="JsonObject.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Parser.cs" />

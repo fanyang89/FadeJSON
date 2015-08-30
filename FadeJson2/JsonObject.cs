@@ -24,8 +24,14 @@ namespace FadeJson2
             }
         }
         
-        public static JsonObject FromFile(string filename) {
+        public static dynamic FromFile(string filename) {
             var lexer = Lexer.FromFile(filename);
+            var parser = new Parser(lexer);
+            return parser.Parse();
+        }
+
+        public static dynamic FromString(string content) {
+            var lexer = Lexer.FromString(content);
             var parser = new Parser(lexer);
             return parser.Parse();
         }

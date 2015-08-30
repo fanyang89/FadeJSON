@@ -1,51 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Diagnostics;
 
 namespace Test
 {
-    static class Program
+    class Program
     {
-        private const int TEST_COUNT = 1;
+        static string JsonFileContent;
 
-        [STAThread]
         static void Main(string[] args) {
-            var content = File.ReadAllText("test.json");
-            FadeJsonTest(content);
-            JsonDotNetTest(content);
+            const int TEST_COUNT = 1;
+            JsonFileContent = File.ReadAllText("testSuite.json");
+
+            Console.WriteLine("===========FadeJson2 Test===========");
+            var fadeRankList = new List<int>(TEST_COUNT);
+            for (int i = 0; i < TEST_COUNT; i++) {
+                var rank = FadeJson2Test();
+                fadeRankList.Add(rank);
+                Console.WriteLine($"NO.{i} {rank} ms");
+            }
+            Console.WriteLine($"Avg: {fadeRankList.Average()}");
+
+            Console.WriteLine("===========Json.NET Test===========");
+            var jsonDotNetRankList = new List<int>(TEST_COUNT);
+            for (int i = 0; i < TEST_COUNT; i++) {
+                var rank = JsonDotNetTest();
+                jsonDotNetRankList.Add(rank);
+                Console.WriteLine($"NO.{i} {rank} ms");
+            }
+            Console.WriteLine($"Avg: {jsonDotNetRankList.Average()}");
+
             Console.ReadKey();
         }
 
-        static void JsonDotNetTest(string content) {
-            var stopwatch = new Stopwatch();
-            var elapsedTime = new long[TEST_COUNT];
-            for (var i = 0; i < TEST_COUNT; i++) {
-                stopwatch.Start();
-                var b = Newtonsoft.Json.Linq.JObject.Parse(content);
-                var valueB = b["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
-                stopwatch.Stop();
-                elapsedTime[i] = stopwatch.ElapsedMilliseconds;
-                stopwatch.Reset();
-            }
-            Console.WriteLine($"Json.NET :{elapsedTime.Average()} ms");
+        static int FadeJson2Test() {
+            var sw = new Stopwatch();
+
+            sw.Start();
+            var j = FadeJson2.JsonObject.FromString(JsonFileContent);
+            var description = j["description"];
+            var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
+            sw.Stop();
+
+            //Console.WriteLine($"description: {description}");
+            //Console.WriteLine($"linqVersion: {linqVersion}");
+            return sw.Elapsed.Milliseconds;
         }
 
-        static void FadeJsonTest(string content) {
-            var stopwatch = new Stopwatch();
-            var elapsedTime = new long[TEST_COUNT];
-            for (var i = 0; i < TEST_COUNT; i++) {
-                stopwatch.Start();
-                var a = FadeJson.JsonObject.FromString(content);
-                var valueA = a["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
-                stopwatch.Stop();
-                elapsedTime[i] = stopwatch.ElapsedMilliseconds;
-                stopwatch.Reset();
-            }
-            Console.WriteLine($"FadeJson :{elapsedTime.Average()} ms");
+        static int JsonDotNetTest() {
+            var sw = new Stopwatch();
+
+            sw.Start();
+            var j = Newtonsoft.Json.Linq.JObject.Parse(JsonFileContent);
+            var description = j["description"];
+            var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
+            sw.Stop();
+
+            //Console.WriteLine($"description: {description}");
+            //Console.WriteLine($"linqVersion: {linqVersion}");
+            return sw.Elapsed.Milliseconds;
         }
     }
 }

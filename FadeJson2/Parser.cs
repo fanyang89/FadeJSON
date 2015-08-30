@@ -90,6 +90,7 @@ namespace FadeJson2
                 switch (t.TokenType) {
                     case TokenType.StringType:
                     case TokenType.IntegerType:
+                    case TokenType.BoolType:
                         result = t.RealValue;
                         return true;
                 }
