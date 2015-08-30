@@ -42,8 +42,6 @@ namespace FadeJson2
 
         private JsonObject ParseJsonObject() {
             var j = new JsonObject();
-            var isExit = false;
-            _.IsExit = new Ref<bool>(() => isExit, v => { isExit = v; });
 
             _.UsingToken("{");
 
@@ -60,13 +58,11 @@ namespace FadeJson2
 
         private KeyValuePair<string, dynamic>? ParsePair() {
             var key = string.Empty;
-            var isExit = false;
-            _.IsExit = new Ref<bool>(() => isExit, v => { isExit = v; });
 
             _.UsingToken(t => {
                 key = t.Value;
                 return true;
-            }, TokenType.StringType, () => { isExit = true; });
+            }, TokenType.StringType);
 
             _.UsingToken(":");
 

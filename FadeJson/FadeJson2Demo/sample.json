@@ -1,3 +1,10 @@
 ﻿{
-  "age": [ 18, 18, 19 ]
+  "age": [
+    {
+      "Chinese": "18"
+    } , 
+    {
+      "English": "eighteen"
+    }
+  ]
 }

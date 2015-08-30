@@ -99,6 +99,7 @@ namespace FadeJson2
             return new Token(res.ToString(), TokenType.IntegerType);
         }
 
+
         public List<Token> GetAllTokens() {
             var tokens = new List<Token>();
             var token = NextToken();
