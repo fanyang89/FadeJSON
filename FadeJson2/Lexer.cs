@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Data.SqlTypes;
+using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Emit;
 using System.Text;
 
 namespace FadeJson2
 {
-    public class Token<T>
-    {
-        public readonly T Value;
-
-        public Token(T val) {
-            Value = val;
-        }
-    }
-    
     public class Lexer
     {
         public const char Eof = unchecked((char)-1);
-        
+
         private readonly TextReader textReader;
 
         private Lexer(Stream stream) {
@@ -28,12 +18,12 @@ namespace FadeJson2
         private Lexer(string content) {
             textReader = new StringReader(content);
         }
-        
+
         private char GetChar() => (char)textReader.Read();
 
         private char PeekChar() => (char)textReader.Peek();
-        
-        public Token<string> GetStringToken() {
+
+        public Token GetStringToken() {
             var c = GetChar();
             if (c == Eof || c != '\"') {
                 throw new InvalidOperationException(
@@ -57,7 +47,7 @@ namespace FadeJson2
                 }
                 else if (c == '"' && !escape) {
                     GetChar();
-                    return new Token<string>(res.ToString());
+                    return new Token(res.ToString(), TokenType.StringType);
                 }
                 else if (escape) {
                     escape = false;
@@ -66,15 +56,19 @@ namespace FadeJson2
                         case 'n':
                             res.Append('\n');
                             break;
+
                         case 't':
                             res.Append('\t');
                             break;
+
                         case 'r':
                             res.Append('\r');
                             break;
+
                         case '\"':
                             res.Append('\"');
                             break;
+
                         case '\\':
                             res.Append('\\');
                             break;
@@ -88,28 +82,46 @@ namespace FadeJson2
             }
         }
 
-        public Token<int> GetIntToken() {
+        public Token GetIntToken() {
             // Check integrity before loop to avoid accidently returning zero.
             var c = GetChar();
             if (c == Eof || !char.IsDigit(c)) {
                 throw new InvalidOperationException("Internal: lexing number?");
             }
-            var digit = c - '0';
-            var res = digit;
+            var res = new StringBuilder();
+            res.Append(c);
             c = PeekChar();
             while (c != Eof && char.IsDigit(c)) {
-                res = res * 10 + (c - '0');
+                res.Append(c);
                 GetChar();
                 c = PeekChar();
             }
-            return new Token<int>(res);
+            return new Token(res.ToString(), TokenType.IntegerType);
         }
 
-        public dynamic GetToken() {
+        public List<Token> GetAllTokens() {
+            var tokens = new List<Token>();
+            var token = NextToken();
+            while (token != null) {
+                tokens.Add(token);
+                token = NextToken();
+            }
+            return tokens;
+        }
+
+        private readonly List<char> emptyCharList = new List<char> { ' ', '\r', '\n', '\t' };
+
+        private readonly List<char> keyCharList = new List<char> { '{', '}', ':' };
+
+        public Token NextToken() {
             var c = PeekChar();
-            if (c == ' ' || c == '\t') {
+            if (keyCharList.Contains(c)) {
                 GetChar();
-                return GetToken();
+                return new Token(c, TokenType.SyntaxType);
+            }
+            if (emptyCharList.Contains(c)) {
+                GetChar();
+                return NextToken();
             }
             if (char.IsDigit(c)) {
                 return GetIntToken();
@@ -117,7 +129,7 @@ namespace FadeJson2
             if (c == '"') {
                 return GetStringToken();
             }
-            return new Token<string>(GetChar().ToString());
+            return null;
         }
 
         public static Lexer FromString(string content) => new Lexer(content);

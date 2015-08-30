@@ -8,32 +8,32 @@ using System.Threading.Tasks;
 
 namespace FadeJson2.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class LexerTests
     {
         private const string TEST_JSON = @"{""name"" : ""yangfan""}";
 
-        [TestMethod()]
+        [TestMethod]
         public void GetIntTest() {
             const string content = "123456";
             var lexer = Lexer.FromString(content);
             var token = lexer.GetIntToken();
-            Assert.IsTrue(token.Value == 123456);
+            Assert.IsTrue(token.Value == "123456");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetTokenTest() {
             const string content = @"""foobar"" - 123456";
             var lexer = Lexer.FromString(content);
-            dynamic token = lexer.GetToken();
+            dynamic token = lexer.NextToken();
             Assert.IsTrue(token.Value == "foobar");
-            token = lexer.GetToken();
+            token = lexer.NextToken();
             Assert.IsTrue(token.Value == "-");
-            token = lexer.GetToken();
+            token = lexer.NextToken();
             Assert.IsTrue(token.Value == 123456);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetStringTokenTest() {
             const string content = @"""foobar""";
             var lexer = Lexer.FromString(content);
