@@ -104,23 +104,23 @@ namespace FadeJson2
             var tokens = new List<Token>();
             var token = NextToken();
             while (token != null) {
-                tokens.Add(token);
+                tokens.Add(token.Value);
                 token = NextToken();
             }
             return tokens;
         }
 
-        private readonly List<char> emptyCharList = new List<char> { ' ', '\r', '\n', '\t' };
+        private readonly string emptyCharList = " \r\n\t";
 
-        private readonly List<char> keyCharList = new List<char> { '{', '}', ':', ',', '[', ']' };
+        private readonly string keyCharList = "{}:,[]";
 
-        public Token NextToken() {
+        public Token? NextToken() {
             var c = PeekChar();
-            if (keyCharList.Contains(c)) {
+            if (keyCharList.Contains(new string(c, 1))) {
                 GetChar();
                 return new Token(c, TokenType.SyntaxType);
             }
-            if (emptyCharList.Contains(c)) {
+            if (emptyCharList.Contains(new string(c, 1))) {
                 GetChar();
                 return NextToken();
             }
@@ -136,7 +136,7 @@ namespace FadeJson2
             return null;
         }
 
-        private Token GetBoolToken() {
+        private Token? GetBoolToken() {
             var c = PeekChar();
             if (c == 't') {
                 GetChar();

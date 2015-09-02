@@ -23,17 +23,16 @@ namespace FadeJson2
 
         private List<dynamic> ParseJsonArray() {
             var result = new List<dynamic>();
-            Token token;
-            token = _.UsingToken(TokenType.SyntaxType, "[");
+            _.UsingToken(TokenType.SyntaxType, "[");
 
             var value = ParseValue();
             while (value != null) {
                 result.Add(value);
-                token = _.UsingToken(TokenType.SyntaxType, ",");
+                _.UsingToken(TokenType.SyntaxType, ",");
                 value = ParseValue();
             }
 
-            token = _.UsingToken(TokenType.SyntaxType, "]");
+            _.UsingToken(TokenType.SyntaxType, "]");
 
             return result;
         }
@@ -61,7 +60,7 @@ namespace FadeJson2
                 if (token == null) {
                     return null;
                 }
-                key = token.Value;
+                key = token.Value.Value;
             }
             _.UsingToken(TokenType.SyntaxType, ":");
             var value = ParseValue();
@@ -80,7 +79,7 @@ namespace FadeJson2
             }
             {
                 var token = _.UsingTokenExpect(TokenType.SyntaxType);
-                return token != null ? token.RealValue : null;
+                return token != null ? token.Value.RealValue : null;
             }
         }
     }

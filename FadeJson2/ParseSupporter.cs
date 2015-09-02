@@ -12,7 +12,7 @@ namespace FadeJson2
 
         private readonly Queue<Token> tokenQueue = new Queue<Token>();
 
-        private Token NextToken {
+        private Token? NextToken {
             get {
                 if (tokenQueue.Count == 0) {
                     return Lexer.NextToken();
@@ -21,11 +21,14 @@ namespace FadeJson2
             }
         }
 
-        private void RollbackToken(Token token) {
-            tokenQueue.Enqueue(token);
+        private void RollbackToken(Token? token) {
+            if (token == null) {
+                return;
+            }
+            tokenQueue.Enqueue(token.Value);
         }
 
-        public Token UsingToken() {
+        public Token? UsingToken() {
             var token = NextToken;
             if (token == null) {
                 return null;
@@ -33,36 +36,36 @@ namespace FadeJson2
             return token;
         }
 
-        public Token UsingToken(TokenType tokenType) {
+        public Token? UsingToken(TokenType tokenType) {
             var token = NextToken;
             if (token == null) {
                 return null;
             }
-            if (token.TokenType == tokenType) {
+            if (token.Value.TokenType == tokenType) {
                 return token;
             }
             RollbackToken(token);
             return null;
         }
 
-        public Token UsingToken(TokenType tokenType, string value) {
+        public Token? UsingToken(TokenType tokenType, string value) {
             var token = NextToken;
             if (token == null) {
                 return null;
             }
-            if (token.TokenType == tokenType && token.Value == value) {
+            if (token.Value.TokenType == tokenType && token.Value.Value == value) {
                 return token;
             }
             RollbackToken(token);
             return null;
         }
 
-        public Token UsingTokenExpect(TokenType tokenType) {
+        public Token? UsingTokenExpect(TokenType tokenType) {
             var token = NextToken;
             if (token == null) {
                 return null;
             }
-            if (token.TokenType != tokenType) {
+            if (token.Value.TokenType != tokenType) {
                 return token;
             }
             RollbackToken(token);
@@ -75,7 +78,7 @@ namespace FadeJson2
                 RollbackToken(token);
                 return false;
             }
-            if (token.TokenType == tokenType && token.Value == value) {
+            if (token.Value.TokenType == tokenType && token.Value.Value == value) {
                 RollbackToken(token);
                 return true;
             }

@@ -10,7 +10,7 @@ namespace FadeJson2
         BoolType
     }
 
-    public class Token
+    public struct Token
     {
         public string Value { get; }
         public TokenType TokenType { get; }
