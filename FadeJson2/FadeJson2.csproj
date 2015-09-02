@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extension.cs" />
     <Compile Include="JsonObject.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Parser.cs" />

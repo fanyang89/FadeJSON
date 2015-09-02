@@ -25,83 +25,62 @@ namespace FadeJson2
             tokenQueue.Enqueue(token);
         }
 
-        public delegate bool UsingTokenDelegate(Token token);
-
-        public ParseSupporter UsingToken(UsingTokenDelegate method) {
+        public Token UsingToken() {
             var token = NextToken;
             if (token == null) {
-                return this;
+                return null;
             }
-            var result = method.Invoke(token);
-            if (!result) {
-                RollbackToken(token);
-            }
-            return this;
+            return token;
         }
 
-        public delegate void MyAction();
-
-        public ParseSupporter UsingToken(UsingTokenDelegate method, TokenType tokenType) {
+        public Token UsingToken(TokenType tokenType) {
             var token = NextToken;
             if (token == null) {
-                return this;
+                return null;
             }
-            if (token.TokenType != tokenType) {
-                RollbackToken(token);
-                return this;
-            }
-            var result = method.Invoke(token);
-            if (!result) {
-                RollbackToken(token);
-            }
-            return this;
-        }
-
-        public ParseSupporter UsingToken(TokenType tokenType, dynamic tokenValue) {
-            var token = NextToken;
-            if (token == null) {
-                return this;
-            }
-            if (token.TokenType != tokenType || token.Value != tokenValue) {
-                RollbackToken(token);
-            }
-            return this;
-        }
-
-        public ParseSupporter UsingToken(TokenType tokenType) {
-            var token = NextToken;
-            if (token == null) {
-                return this;
-            }
-            if (token.TokenType != tokenType) {
-                RollbackToken(token);
-            }
-            return this;
-        }
-
-        public bool UsingToken(dynamic tokenValue) {
-            var token = NextToken;
-            if (token == null) {
-                return false;
-            }
-            if (token.Value != tokenValue) {
-                RollbackToken(token);
-                return false;
-            }
-            return true;
-        }
-
-        public bool CheckToken(dynamic tokenValue) {
-            var token = NextToken;
-            if (token == null) {
-                return false;
-            }
-            if (token.Value != tokenValue) {
-                RollbackToken(token);
-                return false;
+            if (token.TokenType == tokenType) {
+                return token;
             }
             RollbackToken(token);
-            return true;
+            return null;
+        }
+
+        public Token UsingToken(TokenType tokenType, string value) {
+            var token = NextToken;
+            if (token == null) {
+                return null;
+            }
+            if (token.TokenType == tokenType && token.Value == value) {
+                return token;
+            }
+            RollbackToken(token);
+            return null;
+        }
+
+        public Token UsingTokenExpect(TokenType tokenType) {
+            var token = NextToken;
+            if (token == null) {
+                return null;
+            }
+            if (token.TokenType != tokenType) {
+                return token;
+            }
+            RollbackToken(token);
+            return null;
+        }
+
+        public bool MatchToken(TokenType tokenType, string value) {
+            var token = NextToken;
+            if (token == null) {
+                RollbackToken(token);
+                return false;
+            }
+            if (token.TokenType == tokenType && token.Value == value) {
+                RollbackToken(token);
+                return true;
+            }
+            RollbackToken(token);
+            return false;
         }
 
     }

@@ -13,27 +13,9 @@ namespace Test
         static string JsonFileContent;
 
         static void Main(string[] args) {
-            const int TEST_COUNT = 1;
             JsonFileContent = File.ReadAllText("testSuite.json");
-
-            Console.WriteLine("===========FadeJson2 Test===========");
-            var fadeRankList = new List<int>(TEST_COUNT);
-            for (int i = 0; i < TEST_COUNT; i++) {
-                var rank = FadeJson2Test();
-                fadeRankList.Add(rank);
-                Console.WriteLine($"NO.{i} {rank} ms");
-            }
-            Console.WriteLine($"Avg: {fadeRankList.Average()}");
-
-            Console.WriteLine("===========Json.NET Test===========");
-            var jsonDotNetRankList = new List<int>(TEST_COUNT);
-            for (int i = 0; i < TEST_COUNT; i++) {
-                var rank = JsonDotNetTest();
-                jsonDotNetRankList.Add(rank);
-                Console.WriteLine($"NO.{i} {rank} ms");
-            }
-            Console.WriteLine($"Avg: {jsonDotNetRankList.Average()}");
-
+            Console.WriteLine("FadeJson2 Test: {0}ms", FadeJson2Test());
+            Console.WriteLine("Json.NET Test: {0}ms", JsonDotNetTest());
             Console.ReadKey();
         }
 
@@ -48,6 +30,7 @@ namespace Test
 
             //Console.WriteLine($"description: {description}");
             //Console.WriteLine($"linqVersion: {linqVersion}");
+
             return sw.Elapsed.Milliseconds;
         }
 
@@ -62,6 +45,7 @@ namespace Test
 
             //Console.WriteLine($"description: {description}");
             //Console.WriteLine($"linqVersion: {linqVersion}");
+
             return sw.Elapsed.Milliseconds;
         }
     }

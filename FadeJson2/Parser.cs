@@ -7,19 +7,15 @@ namespace FadeJson2
     {
         private readonly ParseSupporter _;
 
-        public Parser(ParseSupporter parseSupporter) {
-            _ = parseSupporter;
-        }
-
         public Parser(Lexer lexer) {
             _ = new ParseSupporter(lexer);
         }
 
         public dynamic Parse() {
-            if (_.CheckToken("{")) {
+            if (_.MatchToken(TokenType.SyntaxType, "{")) {
                 return ParseJsonObject();
             }
-            if (_.CheckToken("[")) {
+            if (_.MatchToken(TokenType.SyntaxType, "[")) {
                 return ParseJsonArray();
             }
             throw new FormatException();
@@ -27,76 +23,65 @@ namespace FadeJson2
 
         private List<dynamic> ParseJsonArray() {
             var result = new List<dynamic>();
-            _.UsingToken("[");
+            Token token;
+            token = _.UsingToken(TokenType.SyntaxType, "[");
 
             var value = ParseValue();
             while (value != null) {
                 result.Add(value);
-                _.UsingToken(",");
+                token = _.UsingToken(TokenType.SyntaxType, ",");
                 value = ParseValue();
             }
 
-            _.UsingToken("]");
+            token = _.UsingToken(TokenType.SyntaxType, "]");
+
             return result;
         }
 
         private JsonObject ParseJsonObject() {
             var j = new JsonObject();
 
-            _.UsingToken("{");
+            _.UsingToken(TokenType.SyntaxType, "{");
 
             var pair = ParsePair();
             while (pair != null) {
                 j.AddKeyValue(pair);
-                _.UsingToken(",");
+                _.UsingToken(TokenType.SyntaxType, ",");
                 pair = ParsePair();
             }
 
-            _.UsingToken("}");
+            _.UsingToken(TokenType.SyntaxType, "}");
             return j;
         }
 
         private KeyValuePair<string, dynamic>? ParsePair() {
             var key = string.Empty;
-
-            _.UsingToken(t => {
-                key = t.Value;
-                return true;
-            }, TokenType.StringType);
-
-            _.UsingToken(":");
-
+            {
+                var token = _.UsingToken(TokenType.StringType);
+                if (token == null) {
+                    return null;
+                }
+                key = token.Value;
+            }
+            _.UsingToken(TokenType.SyntaxType, ":");
             var value = ParseValue();
             if (value == null) {
                 return null;
             }
-
             return new KeyValuePair<string, dynamic>(key, value);
         }
 
         private dynamic ParseValue() {
-            dynamic result = null;
-            
-            if (_.CheckToken("{")) {
-                result = ParseJsonObject();
-                return result;
+            if (_.MatchToken(TokenType.SyntaxType, "{")) {
+                return ParseJsonObject();
             }
-            if (_.CheckToken("[")) {
-                result = ParseJsonArray();
-                return result;
+            if (_.MatchToken(TokenType.SyntaxType, "[")) {
+                return ParseJsonArray();
             }
-
-            _.UsingToken(t => {
-                switch (t.TokenType) {
-                    case TokenType.StringType:
-                    case TokenType.IntegerType:
-                    case TokenType.BoolType:
-                        result = t.RealValue;
-                        return true;
-                }
-                return true;
-            });
-            return result;
+            {
+                var token = _.UsingTokenExpect(TokenType.SyntaxType);
+                return token != null ? token.RealValue : null;
+            }
         }
     }
 }

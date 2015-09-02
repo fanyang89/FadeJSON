@@ -23,7 +23,7 @@ namespace FadeJson2
 
         private char PeekChar() => (char)textReader.Peek();
 
-        public Token GetStringToken() {
+        private Token GetStringToken() {
             var c = GetChar();
             if (c == Eof || c != '\"') {
                 throw new InvalidOperationException(
@@ -82,7 +82,7 @@ namespace FadeJson2
             }
         }
 
-        public Token GetIntToken() {
+        private Token GetIntToken() {
             // Check integrity before loop to avoid accidently returning zero.
             var c = GetChar();
             if (c == Eof || !char.IsDigit(c)) {
@@ -136,7 +136,7 @@ namespace FadeJson2
             return null;
         }
 
-        public Token GetBoolToken() {
+        private Token GetBoolToken() {
             var c = PeekChar();
             if (c == 't') {
                 GetChar();
