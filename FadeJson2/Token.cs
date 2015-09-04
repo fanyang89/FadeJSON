@@ -33,14 +33,14 @@ namespace FadeJson2
             get {
                 switch (TokenType) {
                     case TokenType.IntegerType:
-                        return new JsonValue(Convert.ToInt32(Value));
+                        return Convert.ToInt32(Value);
 
                     case TokenType.StringType:
                     case TokenType.SyntaxType:
-                        return new JsonValue(Value);
+                        return Value;
 
                     case TokenType.BoolType:
-                        return new JsonValue(Value == "true");
+                        return Value == "true";
 
                     default:
                         throw new InvalidOperationException("UnkownTypeToken");
