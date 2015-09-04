@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace FadeJson2
 {
@@ -21,8 +22,8 @@ namespace FadeJson2
 
     public class JsonValue
     {
-        private readonly Dictionary<object, JsonValue> dict = new Dictionary<object, JsonValue>();
-
+        private readonly HybridDictionary dict = new HybridDictionary();
+        
         public JsonValue() {
             JsonValueType = JsonValueType.Root;
             Value = null;
@@ -53,7 +54,7 @@ namespace FadeJson2
 
         public JsonValue this[object key] {
             get {
-                return dict[key];
+                return (JsonValue)dict[key];
             }
             set {
                 dict[key] = value;
