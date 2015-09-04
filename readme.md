@@ -3,7 +3,7 @@
 
 ## 用法
 ```C#
-var jsonObject = FadeJson2.JsonObject.FromString(content);
+var jsonObject = FadeJson2.JsonValue.FromString(content);
 var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"]; //value == "4.0.0"
 ```
 (就是这么简单)
@@ -11,16 +11,16 @@ var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"]; /
 ## 性能
 FadeJson的第一个版本使用ANTLR，性能很差。通常，FadeJson解析用时大于200ms。
 
-FadeJson2的代码全部手写，性能有很大改善。最近一次的测试数据（Visual Studio 2015, Release配置编译）：
+FadeJson2的代码全部手写，性能有很大改善。
 
 ### 最近五次测试
+（Visual Studio 2015, Release配置编译）
 （单位毫秒。耗时越短越好）
 
 |FadeJson2|Json.NET|
 |----|----|
-|46ms|32ms|
-|45ms|32ms|
-|43ms|31ms|
-|49ms|34ms|
-|45ms|33ms|
-|42ms|31ms|
+|21ms|27ms|
+|21ms|26ms|
+|20ms|27ms|
+|20ms|26ms|
+|20ms|29ms|
