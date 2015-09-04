@@ -29,16 +29,19 @@ namespace FadeJson2
             return Value;
         }
 
-        public dynamic RealValue {
+        public JsonValue RealValue {
             get {
                 switch (TokenType) {
                     case TokenType.IntegerType:
-                        return Convert.ToInt32(Value);
+                        return new JsonValue(Convert.ToInt32(Value));
+
                     case TokenType.StringType:
                     case TokenType.SyntaxType:
-                        return Value;
+                        return new JsonValue(Value);
+
                     case TokenType.BoolType:
-                        return Value == "true";
+                        return new JsonValue(Value == "true");
+
                     default:
                         throw new InvalidOperationException("UnkownTypeToken");
                 }

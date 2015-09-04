@@ -21,13 +21,14 @@ namespace FadeJson2
             throw new FormatException();
         }
 
-        private List<dynamic> ParseJsonArray() {
-            var result = new List<dynamic>();
+        private JsonValue ParseJsonArray() {
+            var result = new JsonValue();
             _.UsingToken(TokenType.SyntaxType, "[");
 
             var value = ParseValue();
+            int index = 0;
             while (value != null) {
-                result.Add(value);
+                result.AddKeyValue(index++, value);
                 _.UsingToken(TokenType.SyntaxType, ",");
                 value = ParseValue();
             }
@@ -37,8 +38,8 @@ namespace FadeJson2
             return result;
         }
 
-        private JsonObject ParseJsonObject() {
-            var j = new JsonObject();
+        private JsonValue ParseJsonObject() {
+            var j = new JsonValue();
 
             _.UsingToken(TokenType.SyntaxType, "{");
 
@@ -53,7 +54,7 @@ namespace FadeJson2
             return j;
         }
 
-        private KeyValuePair<string, dynamic>? ParsePair() {
+        private KeyValuePair<object, JsonValue>? ParsePair() {
             var key = string.Empty;
             {
                 var token = _.UsingToken(TokenType.StringType);
@@ -67,10 +68,10 @@ namespace FadeJson2
             if (value == null) {
                 return null;
             }
-            return new KeyValuePair<string, dynamic>(key, value);
+            return new KeyValuePair<object, JsonValue>(key, value);
         }
 
-        private dynamic ParseValue() {
+        private JsonValue ParseValue() {
             if (_.MatchToken(TokenType.SyntaxType, "{")) {
                 return ParseJsonObject();
             }

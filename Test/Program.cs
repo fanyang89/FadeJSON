@@ -1,53 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 
 namespace Test
 {
-    class Program
+    internal class Program
     {
-        static string JsonFileContent;
+        private static string JsonFileContent;
 
-        static void Main(string[] args) {
-            JsonFileContent = File.ReadAllText("testSuite.json");
-            int fadeRank = FadeJson2Test();
-            int jsonDotNet = JsonDotNetTest();
-            DrawLine();
-            Console.WriteLine("FadeJson2 Test: {0}ms", fadeRank);
-            Console.WriteLine("Json.NET Test: {0}ms", jsonDotNet);
-            DrawLine();
-            Console.WriteLine("Json.Net比FadeJson2快{0}ms", fadeRank - jsonDotNet);
-            Console.ReadKey();
-        }
-
-        static void DrawLine() {
+        private static void DrawLine() {
             for (int i = 0; i < Console.WindowWidth; i++) {
                 Console.Write("=");
             }
         }
 
-        static int FadeJson2Test() {
+        private static int FadeJson2Test() {
             DrawLine();
             var sw = new Stopwatch();
 
             sw.Start();
-            var j = FadeJson2.JsonObject.FromString(JsonFileContent);
+            var j = FadeJson2.JsonValue.FromString(JsonFileContent);
             var description = j["description"];
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
 
+#if CONTENT_TEST
             Console.WriteLine("Read From Test Suite:");
             Console.WriteLine($"description: {description}");
             Console.WriteLine($"linqVersion: {linqVersion}");
+#endif
 
             return sw.Elapsed.Milliseconds;
         }
 
-        static int JsonDotNetTest() {
+        private static int JsonDotNetTest() {
             DrawLine();
             var sw = new Stopwatch();
 
@@ -57,11 +43,27 @@ namespace Test
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
 
+#if CONTENT_TEST
             Console.WriteLine("Read From Test Suite:");
             Console.WriteLine($"description: {description}");
             Console.WriteLine($"linqVersion: {linqVersion}");
+#endif
 
             return sw.Elapsed.Milliseconds;
+        }
+
+        private static void Main(string[] args) {
+            JsonFileContent = File.ReadAllText("testSuite.json");
+
+            Console.WriteLine("Test Content: Read two items from the same file.");
+
+            int fadeRank = FadeJson2Test();
+            Console.WriteLine("FadeJson2 Test: {0}ms", fadeRank);
+
+            int jsonDotNet = JsonDotNetTest();
+            Console.WriteLine("Json.NET Test: {0}ms", jsonDotNet);
+
+            Console.ReadKey();
         }
     }
 }
