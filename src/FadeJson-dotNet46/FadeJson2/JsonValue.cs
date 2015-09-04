@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace FadeJson2
@@ -23,7 +22,7 @@ namespace FadeJson2
     public class JsonValue
     {
         private readonly HybridDictionary dict = new HybridDictionary();
-        
+
         public JsonValue() {
             JsonValueType = JsonValueType.Root;
             Value = null;
@@ -44,11 +43,6 @@ namespace FadeJson2
             Value = val;
         }
 
-        public JsonValue(object val) {
-            JsonValueType = GetRealType(val);
-            Value = val;
-        }
-
         public JsonValueType JsonValueType { get; }
         public object Value { get; }
 
@@ -59,18 +53,6 @@ namespace FadeJson2
             set {
                 dict[key] = value;
             }
-        }
-
-        public static implicit operator JsonValue(int value) {
-            return new JsonValue(value);
-        }
-
-        public static implicit operator JsonValue(string value) {
-            return new JsonValue(value);
-        }
-
-        public static implicit operator JsonValue(bool value) {
-            return new JsonValue(value);
         }
 
         public static JsonValue FromFile(string filename) {
@@ -85,6 +67,18 @@ namespace FadeJson2
             return parser.Parse();
         }
 
+        public static implicit operator JsonValue(int value) {
+            return new JsonValue(value);
+        }
+
+        public static implicit operator JsonValue(string value) {
+            return new JsonValue(value);
+        }
+
+        public static implicit operator JsonValue(bool value) {
+            return new JsonValue(value);
+        }
+
         public void AddKeyValue(KeyValuePair<object, JsonValue>? pair) {
             if (pair.HasValue)
                 dict.Add(pair.Value.Key, pair.Value.Value);
@@ -96,25 +90,6 @@ namespace FadeJson2
 
         public override string ToString() {
             return Value.ToString();
-        }
-
-        private JsonValueType GetRealType(object obj) {
-            if (obj is JsonValue) {
-                return JsonValueType.Boolean;
-            }
-            if (obj is string) {
-                return JsonValueType.Boolean;
-            }
-            if (obj is List<JsonValue>) {
-                return JsonValueType.Boolean;
-            }
-            if (obj is int) {
-                return JsonValueType.Boolean;
-            }
-            if (obj is bool) {
-                return JsonValueType.Boolean;
-            }
-            throw new FormatException();
         }
     }
 }
