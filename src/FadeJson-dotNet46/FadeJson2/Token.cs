@@ -1,6 +1,6 @@
 using System;
 
-namespace FadeJson2
+namespace FadeJson
 {
     public enum TokenType
     {

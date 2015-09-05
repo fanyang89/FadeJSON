@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FadeJson2
+namespace FadeJson
 {
     public class Parser
     {
@@ -22,7 +22,7 @@ namespace FadeJson2
         }
 
         private JsonValue ParseJsonArray() {
-            var result = new JsonValue();
+            var result = new JsonValue(JsonValueType.Array);
             _.UsingToken(TokenType.SyntaxType, "[");
 
             var value = ParseValue();
@@ -39,7 +39,7 @@ namespace FadeJson2
         }
 
         private JsonValue ParseJsonObject() {
-            var j = new JsonValue();
+            var j = new JsonValue(JsonValueType.Object);
 
             _.UsingToken(TokenType.SyntaxType, "{");
 

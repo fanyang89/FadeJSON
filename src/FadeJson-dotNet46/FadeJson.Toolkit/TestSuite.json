@@ -1,0 +1,9 @@
+{
+  "name": "fade",
+  "Age": 18,
+  "isMarried": true,
+  "array": [ true, false ],
+  "obj": {
+    "abc": 123
+  }
+}

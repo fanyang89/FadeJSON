@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace FadeJson2
+namespace FadeJson
 {
     public class Lexer
     {

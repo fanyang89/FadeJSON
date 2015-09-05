@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Collections;
 
-namespace FadeJson2
+namespace FadeJson
 {
     public enum JsonValueType
     {
-        Root,
+        Object,
+        Array,
         Int,
         String,
-        Boolean,
-        Array
+        Boolean
     }
 
     public static class JsonValueExtension
@@ -22,9 +23,9 @@ namespace FadeJson2
     public class JsonValue
     {
         private readonly HybridDictionary dict = new HybridDictionary();
-
-        public JsonValue() {
-            JsonValueType = JsonValueType.Root;
+        
+        public JsonValue(JsonValueType jsonValueType) {
+            JsonValueType = jsonValueType;
             Value = null;
         }
 
@@ -45,6 +46,8 @@ namespace FadeJson2
 
         public JsonValueType JsonValueType { get; }
         public object Value { get; }
+        public ICollection Keys => dict.Keys;
+        public ICollection Values => dict.Values;        
 
         public JsonValue this[object key] {
             get {

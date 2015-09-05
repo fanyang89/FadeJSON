@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FadeJson2
+namespace FadeJson
 {
     public class ParseSupporter
     {

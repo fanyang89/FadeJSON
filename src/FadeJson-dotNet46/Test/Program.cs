@@ -19,7 +19,7 @@ namespace Test
             var sw = new Stopwatch();
 
             sw.Start();
-            var j = FadeJson2.JsonValue.FromString(JsonFileContent);
+            var j = FadeJson.JsonValue.FromString(JsonFileContent);
             var description = j["description"];
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
