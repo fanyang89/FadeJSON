@@ -6,10 +6,13 @@
 ###FadeJson
 1. 在项目中添加对`FadeJson.dll`的引用。
 2. 添加Using
+
 ```
 using FadeJson;
 ```
+
 3. 读取Json文件的值
+
 ```
 var jsonObject = FadeJson2.JsonValue.FromString(content);
 var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"]; //value == "4.0.0"
