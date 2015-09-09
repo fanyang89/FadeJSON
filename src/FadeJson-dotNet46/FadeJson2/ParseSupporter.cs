@@ -4,27 +4,23 @@ namespace FadeJson
 {
     public class ParseSupporter
     {
-        private readonly Queue<Token> tokenQueue = new Queue<Token>();
+        public int LineNumber => Lexer.LineNumber;
+        public int LinePosition => Lexer.LinePosition;
+
+        readonly Queue<Token> tokenQueue = new Queue<Token>();
 
         public ParseSupporter(Lexer lexer) {
             Lexer = lexer;
         }
 
-        private Lexer Lexer { get; }
+        Lexer Lexer { get; }
 
-        private Token? NextToken {
-            get {
-                if (tokenQueue.Count == 0) {
-                    return Lexer.NextToken();
-                }
-                return tokenQueue.Dequeue();
-            }
-        }
+        Token? NextToken => tokenQueue.Count == 0 ? Lexer.NextToken() : tokenQueue.Dequeue();
 
         public bool MatchToken(TokenType tokenType, string value) {
             var token = NextToken;
             if (token == null) {
-                RollbackToken(token);
+                RollbackToken(null);
                 return false;
             }
             if (token.Value.TokenType == tokenType && token.Value.Value == value) {
@@ -37,9 +33,6 @@ namespace FadeJson
 
         public Token? UsingToken() {
             var token = NextToken;
-            if (token == null) {
-                return null;
-            }
             return token;
         }
 
@@ -79,7 +72,7 @@ namespace FadeJson
             return null;
         }
 
-        private void RollbackToken(Token? token) {
+        void RollbackToken(Token? token) {
             if (token == null) {
                 return;
             }

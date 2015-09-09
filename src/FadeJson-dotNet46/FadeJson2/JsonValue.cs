@@ -22,8 +22,8 @@ namespace FadeJson
 
     public class JsonValue
     {
-        private readonly HybridDictionary dict = new HybridDictionary();
-        
+        readonly HybridDictionary dict = new HybridDictionary();
+
         public JsonValue(JsonValueType jsonValueType) {
             JsonValueType = jsonValueType;
             Value = null;

@@ -11,14 +11,14 @@ namespace FadeJson
             _ = new ParseSupporter(lexer);
         }
 
-        public dynamic Parse() {
+        public JsonValue Parse() {
             if (_.MatchToken(TokenType.SyntaxType, "{")) {
                 return ParseJsonObject();
             }
             if (_.MatchToken(TokenType.SyntaxType, "[")) {
                 return ParseJsonArray();
             }
-            throw new FormatException();
+            throw new FormatException($"LineNumber:{_.LineNumber},LinePosition:{_.LinePosition}");
         }
 
         private JsonValue ParseJsonArray() {
@@ -26,7 +26,7 @@ namespace FadeJson
             _.UsingToken(TokenType.SyntaxType, "[");
 
             var value = ParseValue();
-            int index = 0;
+            var index = 0;
             while (value != null) {
                 result.AddKeyValue(index++, value);
                 _.UsingToken(TokenType.SyntaxType, ",");
@@ -55,7 +55,7 @@ namespace FadeJson
         }
 
         private KeyValuePair<object, JsonValue>? ParsePair() {
-            var key = string.Empty;
+            string key;
             {
                 var token = _.UsingToken(TokenType.StringType);
                 if (token == null) {
@@ -71,7 +71,7 @@ namespace FadeJson
             return new KeyValuePair<object, JsonValue>(key, value);
         }
 
-        private JsonValue ParseValue() {
+        JsonValue ParseValue() {
             if (_.MatchToken(TokenType.SyntaxType, "{")) {
                 return ParseJsonObject();
             }
@@ -80,7 +80,7 @@ namespace FadeJson
             }
             {
                 var token = _.UsingTokenExpect(TokenType.SyntaxType);
-                return token != null ? token.Value.RealValue : null;
+                return token?.RealValue;
             }
         }
     }

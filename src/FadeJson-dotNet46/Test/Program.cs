@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define CONTENT_TEST
+using System;
 using System.Diagnostics;
 using System.IO;
 

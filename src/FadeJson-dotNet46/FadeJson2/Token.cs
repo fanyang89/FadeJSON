@@ -14,15 +14,21 @@ namespace FadeJson
     {
         public string Value { get; }
         public TokenType TokenType { get; }
+        public int LineNumber { get; }
+        public int LinePosition { get; }
 
-        public Token(string value, TokenType tokenType) {
+        public Token(string value, TokenType tokenType, int lineNumber, int linePosition) {
             TokenType = tokenType;
             Value = value;
+            LineNumber = lineNumber;
+            LinePosition = linePosition;
         }
 
-        public Token(char value, TokenType tokenType) {
+        public Token(char value, TokenType tokenType, int lineNumber, int linePosition) {
             TokenType = tokenType;
             Value = value.ToString();
+            LineNumber = lineNumber;
+            LinePosition = linePosition;
         }
 
         public override string ToString() {
@@ -43,7 +49,8 @@ namespace FadeJson
                         return Value == "true";
 
                     default:
-                        throw new InvalidOperationException("UnkownTypeToken");
+                        throw new InvalidOperationException(
+                            $"UnkownTypeToken.LineNumber:{LineNumber}.LinePosition{LinePosition}");
                 }
             }
         }
