@@ -35,8 +35,8 @@ FadeJson性能相比初版有很大改善。
 
 |FadeJson2|Json.NET|
 |----|----|
-|21ms|27ms|
-|21ms|26ms|
-|20ms|27ms|
-|20ms|26ms|
-|20ms|29ms|
+| 8ms|26ms|
+| 6ms|26ms|
+| 7ms|24ms|
+| 6ms|25ms|
+| 6ms|25ms|

@@ -7,7 +7,7 @@ namespace Test
 {
     internal class Program
     {
-        private static string JsonFileContent;
+        private static string jsonFileContent;
 
         private static void DrawLine() {
             for (int i = 0; i < Console.WindowWidth; i++) {
@@ -20,7 +20,7 @@ namespace Test
             var sw = new Stopwatch();
 
             sw.Start();
-            var j = FadeJson.JsonValue.FromString(JsonFileContent);
+            var j = FadeJson.JsonValue.FromString(jsonFileContent);
             var description = j["description"];
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
@@ -39,7 +39,7 @@ namespace Test
             var sw = new Stopwatch();
 
             sw.Start();
-            var j = Newtonsoft.Json.Linq.JObject.Parse(JsonFileContent);
+            var j = Newtonsoft.Json.Linq.JObject.Parse(jsonFileContent);
             var description = j["description"];
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
@@ -54,7 +54,7 @@ namespace Test
         }
 
         private static void Main(string[] args) {
-            JsonFileContent = File.ReadAllText("testSuite.json");
+            jsonFileContent = File.ReadAllText("testSuite.json");
 
             Console.WriteLine("Test Content: Read two items from the same file.");
 

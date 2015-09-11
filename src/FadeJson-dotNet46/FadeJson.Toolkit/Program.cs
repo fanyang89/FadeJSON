@@ -26,7 +26,6 @@ namespace FadeJson.Toolkit.ExportClass
         static void Main(string[] args) {
             var namespaceName = string.Empty;
             var className = string.Empty;
-            var fileName = string.Empty;
 
             Console.WriteLine("FadeJson.ToolKit.ExportClass: 帮助你从JSON文件生成对应的类");
 
@@ -38,7 +37,7 @@ namespace FadeJson.Toolkit.ExportClass
                 return;
             }
 
-            fileName = args[0];
+            var fileName = args[0];
 
             if (args.Length == 1) {
                 namespaceName = Input("NamespaceName is ?");

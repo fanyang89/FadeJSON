@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Collections;
 
@@ -47,7 +48,7 @@ namespace FadeJson
         public JsonValueType JsonValueType { get; }
         public object Value { get; }
         public ICollection Keys => dict.Keys;
-        public ICollection Values => dict.Values;        
+        public ICollection Values => dict.Values;
 
         public JsonValue this[object key] {
             get {
@@ -56,6 +57,14 @@ namespace FadeJson
             set {
                 dict[key] = value;
             }
+        }
+
+        public static void SaveToFile() {
+            throw new NotImplementedException();
+        }
+
+        public static JsonValue FromObject(object o) {
+            return Deserializer.Parse(o);
         }
 
         public static JsonValue FromFile(string filename) {
@@ -89,6 +98,10 @@ namespace FadeJson
 
         public void AddKeyValue(int index, JsonValue value) {
             dict.Add(index, value);
+        }
+
+        public void AddKeyValue(string key, object value) {
+            dict.Add(key, value);
         }
 
         public override string ToString() {
