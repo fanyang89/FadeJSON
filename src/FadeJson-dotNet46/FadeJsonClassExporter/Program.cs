@@ -1,29 +1,30 @@
 ﻿using System;
-using System.IO;
 using System.CodeDom;
-using Microsoft.CSharp;
 using System.CodeDom.Compiler;
+using System.IO;
+using FadeJson;
+using Microsoft.CSharp;
 
-namespace FadeJson.Toolkit.ExportClass
+namespace FadeJsonClassExporter
 {
-    static class Program
+    internal static class Program
     {
         //输入：json格式的文件内容
         //输出：该文件对应的类(*.cs)
 
-        static int classCount;
+        private static int classCount;
 
-        static string GetNameFromEnum(JsonValueType valType) {
-            var typeNames = new[] { "JsonValue", "JsonValue", "int", "string", "bool" };
-            return typeNames[(int)valType];
+        private static string GetNameFromEnum(JsonValueType valType) {
+            var typeNames = new[] {"JsonValue", "JsonValue", "int", "string", "bool"};
+            return typeNames[(int) valType];
         }
 
-        static string Input(string msg) {
+        private static string Input(string msg) {
             Console.WriteLine(msg);
             return Console.ReadLine();
         }
 
-        static void Main(string[] args) {
+        private static void Main(string[] args) {
             var namespaceName = string.Empty;
             var className = string.Empty;
 
@@ -53,12 +54,11 @@ namespace FadeJson.Toolkit.ExportClass
             Console.WriteLine("Done.");
         }
 
-        static void GenerateTypeDecl(JsonValue j, string namespaceName, string className) {
+        private static void GenerateTypeDecl(JsonValue j, string namespaceName, string className) {
             var codeNamespace = new CodeNamespace(namespaceName);
             codeNamespace.Imports.Add(new CodeNamespaceImport("FadeJson"));
             var codeClass = new CodeTypeDeclaration(className);
-            var codeCtor = new CodeConstructor
-            {
+            var codeCtor = new CodeConstructor {
                 Attributes = MemberAttributes.Public,
                 Name = className
             };

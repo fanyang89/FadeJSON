@@ -61,7 +61,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FadeJson2\FadeJson.csproj">
+    <ProjectReference Include="..\FadeJson\FadeJson.csproj">
       <Project>{2afa77c8-517c-4840-9231-8f999d036155}</Project>
       <Name>FadeJson</Name>
     </ProjectReference>

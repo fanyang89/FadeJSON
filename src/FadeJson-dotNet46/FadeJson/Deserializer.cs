@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace FadeJson
 {
@@ -15,13 +10,14 @@ namespace FadeJson
                 return null;
             }
             if (obj is int) {
-                return new JsonValue((int)obj);
+                return new JsonValue((int) obj);
             }
+            // ReSharper disable once CanBeReplacedWithTryCastAndCheckForNull
             if (obj is string) {
-                return new JsonValue((string)obj);
+                return new JsonValue((string) obj);
             }
             if (obj is bool) {
-                return new JsonValue((bool)obj);
+                return new JsonValue((bool) obj);
             }
             var t = obj.GetType();
             var members = t.GetMembers();

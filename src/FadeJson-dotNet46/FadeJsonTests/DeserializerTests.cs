@@ -1,21 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FadeJson;
+﻿using FadeJson;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FadeJsonTests
 {
-    [TestClass()]
+    [TestClass]
     public class DeserializerTests
     {
-        private class TestClass
-        {
-            public int intTest = 123;
-        }
-
-        [TestMethod()]
+        [TestMethod]
         public void ParseTest() {
             var j = Deserializer.Parse(new TestClass());
             var intTest = j["intTest"];
-            Assert.IsTrue(intTest.JsonValueType == JsonValueType.Int && (int)intTest.Value == 123);
+            Assert.IsTrue(intTest.JsonValueType == JsonValueType.Int && (int) intTest.Value == 123);
+        }
+
+        private class TestClass
+        {
+            public int intTest = 123;
         }
     }
 }

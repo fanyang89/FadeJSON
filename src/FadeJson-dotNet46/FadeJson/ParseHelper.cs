@@ -2,20 +2,29 @@ using System.Collections.Generic;
 
 namespace FadeJson
 {
-    public class ParseSupporter
+    public class ParseHelper
     {
-        public int LineNumber => Lexer.LineNumber;
-        public int LinePosition => Lexer.LinePosition;
+        private readonly List<Token> tokenQueue = new List<Token>();
 
-        readonly Queue<Token> tokenQueue = new Queue<Token>();
-
-        public ParseSupporter(Lexer lexer) {
+        public ParseHelper(Lexer lexer) {
             Lexer = lexer;
         }
 
-        Lexer Lexer { get; }
+        public int LineNumber => Lexer.CurrentLineNumber;
+        public int LinePosition => Lexer.CurrentLinePosition;
 
-        Token? NextToken => tokenQueue.Count == 0 ? Lexer.NextToken() : tokenQueue.Dequeue();
+        private Lexer Lexer { get; }
+
+        private Token? NextToken {
+            get {
+                if (tokenQueue.Count == 0) {
+                    return Lexer.NextToken();
+                }
+                var token = tokenQueue[0];
+                tokenQueue.RemoveAt(0);
+                return token;
+            }
+        }
 
         public bool MatchToken(TokenType tokenType, string value) {
             var token = NextToken;
@@ -60,6 +69,11 @@ namespace FadeJson
             return null;
         }
 
+        /// <summary>
+        ///     返回除了给定token类型的token
+        /// </summary>
+        /// <param name="tokenType">排除列表</param>
+        /// <returns></returns>
         public Token? UsingTokenExpect(TokenType tokenType) {
             var token = NextToken;
             if (token == null) {
@@ -72,11 +86,11 @@ namespace FadeJson
             return null;
         }
 
-        void RollbackToken(Token? token) {
+        private void RollbackToken(Token? token) {
             if (token == null) {
                 return;
             }
-            tokenQueue.Enqueue(token.Value);
+            tokenQueue.Add(token.Value);
         }
     }
 }

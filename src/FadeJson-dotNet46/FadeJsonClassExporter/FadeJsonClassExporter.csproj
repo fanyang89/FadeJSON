@@ -7,8 +7,8 @@
     <ProjectGuid>{57C107C5-BA2D-46AF-A15A-B3A69F382E91}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FadeJson.Toolkit.ExportClass</RootNamespace>
-    <AssemblyName>FadeJson.Toolkit.ExportClass</AssemblyName>
+    <RootNamespace>FadeJsonClassExporter</RootNamespace>
+    <AssemblyName>FadeJsonClassExporter</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -53,7 +53,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FadeJson2\FadeJson.csproj">
+    <ProjectReference Include="..\FadeJson\FadeJson.csproj">
       <Project>{2afa77c8-517c-4840-9231-8f999d036155}</Project>
       <Name>FadeJson</Name>
     </ProjectReference>

@@ -5,35 +5,36 @@ namespace FadeJson
 {
     public class Parser
     {
-        private readonly ParseSupporter _;
+        private readonly ParseHelper parseSupporter;
 
         public Parser(Lexer lexer) {
-            _ = new ParseSupporter(lexer);
+            parseSupporter = new ParseHelper(lexer);
         }
 
         public JsonValue Parse() {
-            if (_.MatchToken(TokenType.SyntaxType, "{")) {
+            if (parseSupporter.MatchToken(TokenType.SyntaxType, "{")) {
                 return ParseJsonObject();
             }
-            if (_.MatchToken(TokenType.SyntaxType, "[")) {
+            if (parseSupporter.MatchToken(TokenType.SyntaxType, "[")) {
                 return ParseJsonArray();
             }
-            throw new FormatException($"LineNumber:{_.LineNumber},LinePosition:{_.LinePosition}");
+            throw new FormatException(
+                $"LineNumber:{parseSupporter.LineNumber},LinePosition:{parseSupporter.LinePosition}");
         }
 
         private JsonValue ParseJsonArray() {
             var result = new JsonValue(JsonValueType.Array);
-            _.UsingToken(TokenType.SyntaxType, "[");
+            parseSupporter.UsingToken(TokenType.SyntaxType, "[");
 
             var value = ParseValue();
             var index = 0;
             while (value != null) {
                 result.AddKeyValue(index++, value);
-                _.UsingToken(TokenType.SyntaxType, ",");
+                parseSupporter.UsingToken(TokenType.SyntaxType, ",");
                 value = ParseValue();
             }
 
-            _.UsingToken(TokenType.SyntaxType, "]");
+            parseSupporter.UsingToken(TokenType.SyntaxType, "]");
 
             return result;
         }
@@ -41,29 +42,29 @@ namespace FadeJson
         private JsonValue ParseJsonObject() {
             var j = new JsonValue(JsonValueType.Object);
 
-            _.UsingToken(TokenType.SyntaxType, "{");
+            parseSupporter.UsingToken(TokenType.SyntaxType, "{");
 
             var pair = ParsePair();
             while (pair != null) {
                 j.AddKeyValue(pair);
-                _.UsingToken(TokenType.SyntaxType, ",");
+                parseSupporter.UsingToken(TokenType.SyntaxType, ",");
                 pair = ParsePair();
             }
 
-            _.UsingToken(TokenType.SyntaxType, "}");
+            parseSupporter.UsingToken(TokenType.SyntaxType, "}");
             return j;
         }
 
         private KeyValuePair<object, JsonValue>? ParsePair() {
             string key;
             {
-                var token = _.UsingToken(TokenType.StringType);
+                var token = parseSupporter.UsingToken(TokenType.StringType);
                 if (token == null) {
                     return null;
                 }
                 key = token.Value.Value;
             }
-            _.UsingToken(TokenType.SyntaxType, ":");
+            parseSupporter.UsingToken(TokenType.SyntaxType, ":");
             var value = ParseValue();
             if (value == null) {
                 return null;
@@ -71,15 +72,15 @@ namespace FadeJson
             return new KeyValuePair<object, JsonValue>(key, value);
         }
 
-        JsonValue ParseValue() {
-            if (_.MatchToken(TokenType.SyntaxType, "{")) {
+        private JsonValue ParseValue() {
+            if (parseSupporter.MatchToken(TokenType.SyntaxType, "{")) {
                 return ParseJsonObject();
             }
-            if (_.MatchToken(TokenType.SyntaxType, "[")) {
+            if (parseSupporter.MatchToken(TokenType.SyntaxType, "[")) {
                 return ParseJsonArray();
             }
             {
-                var token = _.UsingTokenExpect(TokenType.SyntaxType);
+                var token = parseSupporter.UsingTokenExpect(TokenType.SyntaxType);
                 return token?.RealValue;
             }
         }

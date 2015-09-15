@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace FadeJson
 {
@@ -23,7 +22,7 @@ namespace FadeJson
 
     public class JsonValue
     {
-        readonly HybridDictionary dict = new HybridDictionary();
+        private readonly Dictionary<object, object> dict = new Dictionary<object, object>();
 
         public JsonValue(JsonValueType jsonValueType) {
             JsonValueType = jsonValueType;
@@ -51,12 +50,8 @@ namespace FadeJson
         public ICollection Values => dict.Values;
 
         public JsonValue this[object key] {
-            get {
-                return (JsonValue)dict[key];
-            }
-            set {
-                dict[key] = value;
-            }
+            get { return (JsonValue)dict[key]; }
+            set { dict[key] = value; }
         }
 
         public static void SaveToFile() {
@@ -105,7 +100,7 @@ namespace FadeJson
         }
 
         public override string ToString() {
-            return Value.ToString();
+            return Value?.ToString() ?? string.Empty;
         }
     }
 }

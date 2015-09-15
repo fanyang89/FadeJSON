@@ -2,6 +2,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using FadeJson;
+using Newtonsoft.Json.Linq;
 
 namespace Test
 {
@@ -10,7 +12,7 @@ namespace Test
         private static string jsonFileContent;
 
         private static void DrawLine() {
-            for (int i = 0; i < Console.WindowWidth; i++) {
+            for (var i = 0; i < Console.WindowWidth; i++) {
                 Console.Write("=");
             }
         }
@@ -20,7 +22,7 @@ namespace Test
             var sw = new Stopwatch();
 
             sw.Start();
-            var j = FadeJson.JsonValue.FromString(jsonFileContent);
+            var j = JsonValue.FromString(jsonFileContent);
             var description = j["description"];
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
@@ -39,7 +41,7 @@ namespace Test
             var sw = new Stopwatch();
 
             sw.Start();
-            var j = Newtonsoft.Json.Linq.JObject.Parse(jsonFileContent);
+            var j = JObject.Parse(jsonFileContent);
             var description = j["description"];
             var linqVersion = j["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
             sw.Stop();
@@ -53,16 +55,42 @@ namespace Test
             return sw.Elapsed.Milliseconds;
         }
 
+        /// <summary>
+        /// 简易正确性测试（不测试object和array）
+        /// </summary>
+        private static void CorrectnessTest() {
+            DrawLine();
+            Console.WriteLine("CorrectnessTest begin.");
+            var jsonnet = JObject.Parse(jsonFileContent);
+            var fadejson = FadeJson.JsonValue.FromString(jsonFileContent);
+            foreach (var key in fadejson.Keys) {
+                var item = fadejson[key];
+                if (item.JsonValueType == JsonValueType.Object) continue;
+                if (item.JsonValueType == JsonValueType.Array) {
+                    continue;
+                }
+                var correct = jsonnet[key];
+                if (item.ToString() != correct.ToString()) {
+                    throw new InvalidOperationException();
+                }
+            }
+            Console.WriteLine("CorrectnessTest completed.");
+        }
+
+
+
         private static void Main(string[] args) {
             jsonFileContent = File.ReadAllText("testSuite.json");
 
             Console.WriteLine("Test Content: Read two items from the same file.");
 
-            int fadeRank = FadeJson2Test();
+            var fadeRank = FadeJson2Test();
             Console.WriteLine("FadeJson2 Test: {0}ms", fadeRank);
 
-            int jsonDotNet = JsonDotNetTest();
+            var jsonDotNet = JsonDotNetTest();
             Console.WriteLine("Json.NET Test: {0}ms", jsonDotNet);
+
+            CorrectnessTest();
 
             Console.ReadKey();
         }

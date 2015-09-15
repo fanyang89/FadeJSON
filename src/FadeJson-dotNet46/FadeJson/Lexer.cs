@@ -7,21 +7,22 @@ namespace FadeJson
 {
     public class Lexer
     {
-        public const char Eof = unchecked((char)-1);
+        public const char Eof = unchecked((char) -1);
 
         private const string EmptyCharList = " \r\n\t";
         private const string KeyCharList = "{}:,[]";
-        readonly TextReader textReader;
-        public int LineNumber { get; set; }
-        public int LinePosition { get; set; }
+        private readonly TextReader textReader;
 
-        Lexer(Stream stream) {
+        private Lexer(Stream stream) {
             textReader = new StreamReader(stream);
         }
 
-        Lexer(string content) {
+        private Lexer(string content) {
             textReader = new StringReader(content);
         }
+
+        public int CurrentLineNumber { get; set; } = 1;
+        public int CurrentLinePosition { get; set; }
 
         public static Lexer FromFile(string filename) => new Lexer(new FileStream(filename, FileMode.Open));
 
@@ -42,16 +43,16 @@ namespace FadeJson
         public Token? NextToken() {
             var c = PeekChar();
             if (c == '\n') {
-                LineNumber++;
-                LinePosition = 0;
-            }
-            if (KeyCharList.Contains(new string(c, 1))) {
-                GetChar();
-                return new Token(c, TokenType.SyntaxType, LineNumber, LinePosition);
+                CurrentLineNumber++;
+                CurrentLinePosition = 0;
             }
             if (EmptyCharList.Contains(new string(c, 1))) {
                 GetChar();
                 return NextToken();
+            }
+            if (KeyCharList.Contains(new string(c, 1))) {
+                GetChar();
+                return new Token(c, TokenType.SyntaxType, CurrentLineNumber, CurrentLinePosition);
             }
             if (char.IsDigit(c)) {
                 return GetIntToken();
@@ -66,7 +67,7 @@ namespace FadeJson
             return null;
         }
 
-        Token? GetBoolToken() {
+        private Token? GetBoolToken() {
             var c = PeekChar();
             if (c == 't') {
                 GetChar();
@@ -79,7 +80,7 @@ namespace FadeJson
                         c = PeekChar();
                         if (c == 'e') {
                             GetChar();
-                            return new Token("true", TokenType.BoolType, LineNumber, LinePosition);
+                            return new Token("true", TokenType.BoolType, CurrentLineNumber, CurrentLinePosition);
                         }
                     }
                 }
@@ -98,7 +99,7 @@ namespace FadeJson
                             c = PeekChar();
                             if (c == 'e') {
                                 GetChar();
-                                return new Token("false", TokenType.BoolType, LineNumber, LinePosition);
+                                return new Token("false", TokenType.BoolType, CurrentLineNumber, CurrentLinePosition);
                             }
                         }
                     }
@@ -107,9 +108,12 @@ namespace FadeJson
             throw new NotImplementedException();
         }
 
-        char GetChar() => (char)textReader.Read();
+        private char GetChar() {
+            CurrentLinePosition++;
+            return (char) textReader.Read();
+        }
 
-        Token GetIntToken() {
+        private Token GetIntToken() {
             // Check integrity before loop to avoid accidently returning zero.
             var c = GetChar();
             if (c == Eof || !char.IsDigit(c)) {
@@ -123,10 +127,10 @@ namespace FadeJson
                 GetChar();
                 c = PeekChar();
             }
-            return new Token(res.ToString(), TokenType.IntegerType, LineNumber, LinePosition);
+            return new Token(res.ToString(), TokenType.IntegerType, CurrentLineNumber, CurrentLinePosition);
         }
 
-        Token GetStringToken() {
+        private Token GetStringToken() {
             var c = GetChar();
             if (c == Eof || c != '\"') {
                 throw new InvalidOperationException(
@@ -150,7 +154,7 @@ namespace FadeJson
                 }
                 else if (c == '"' && !escape) {
                     GetChar();
-                    return new Token(res.ToString(), TokenType.StringType, LineNumber, LinePosition);
+                    return new Token(res.ToString(), TokenType.StringType, CurrentLineNumber, CurrentLinePosition);
                 }
                 else if (escape) {
                     escape = false;
@@ -185,6 +189,6 @@ namespace FadeJson
             }
         }
 
-        char PeekChar() => (char)textReader.Peek();
+        private char PeekChar() => (char) textReader.Peek();
     }
 }
