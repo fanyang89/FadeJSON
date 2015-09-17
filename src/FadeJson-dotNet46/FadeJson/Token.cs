@@ -7,7 +7,8 @@ namespace FadeJson
         IntegerType,
         StringType,
         SyntaxType,
-        BoolType
+        BoolType,
+        DoubleType
     }
 
     public struct Token
@@ -47,6 +48,9 @@ namespace FadeJson
 
                     case TokenType.BoolType:
                         return Value == "true";
+
+                    case TokenType.DoubleType:
+                        return double.Parse(Value);
 
                     default:
                         throw new InvalidOperationException(

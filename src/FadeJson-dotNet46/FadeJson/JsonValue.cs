@@ -10,7 +10,8 @@ namespace FadeJson
         Array,
         Int,
         String,
-        Boolean
+        Boolean,
+        Double
     }
 
     public static class JsonValueExtension
@@ -34,6 +35,11 @@ namespace FadeJson
             Value = val;
         }
 
+        public JsonValue(double val) {
+            JsonValueType = JsonValueType.Double;
+            Value = val;
+        }
+
         public JsonValue(int val) {
             JsonValueType = JsonValueType.Int;
             Value = val;
@@ -52,10 +58,6 @@ namespace FadeJson
         public JsonValue this[object key] {
             get { return (JsonValue)dict[key]; }
             set { dict[key] = value; }
-        }
-
-        public static void SaveToFile() {
-            throw new NotImplementedException();
         }
 
         public static JsonValue FromObject(object o) {
@@ -86,9 +88,14 @@ namespace FadeJson
             return new JsonValue(value);
         }
 
+        public static implicit operator JsonValue(double value) {
+            return new JsonValue(value);
+        }
+
         public void AddKeyValue(KeyValuePair<object, JsonValue>? pair) {
-            if (pair.HasValue)
+            if (pair.HasValue) {
                 dict.Add(pair.Value.Key, pair.Value.Value);
+            }
         }
 
         public void AddKeyValue(int index, JsonValue value) {

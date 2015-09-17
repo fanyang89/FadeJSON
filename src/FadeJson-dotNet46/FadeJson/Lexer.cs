@@ -7,7 +7,7 @@ namespace FadeJson
 {
     public class Lexer
     {
-        public const char Eof = unchecked((char) -1);
+        public const char Eof = unchecked((char)-1);
 
         private const string EmptyCharList = " \r\n\t";
         private const string KeyCharList = "{}:,[]";
@@ -55,7 +55,7 @@ namespace FadeJson
                 return new Token(c, TokenType.SyntaxType, CurrentLineNumber, CurrentLinePosition);
             }
             if (char.IsDigit(c)) {
-                return GetIntToken();
+                return GetNumberToken();
             }
             if (c == '"') {
                 return GetStringToken();
@@ -105,29 +105,37 @@ namespace FadeJson
                     }
                 }
             }
-            throw new NotImplementedException();
+            throw new FormatException();
         }
 
         private char GetChar() {
             CurrentLinePosition++;
-            return (char) textReader.Read();
+            return (char)textReader.Read();
         }
 
-        private Token GetIntToken() {
+        private Token GetNumberToken() {
             // Check integrity before loop to avoid accidently returning zero.
             var c = GetChar();
             if (c == Eof || !char.IsDigit(c)) {
                 throw new InvalidOperationException("Internal: lexing number?");
             }
             var res = new StringBuilder();
+            var isDouble = false;
             res.Append(c);
             c = PeekChar();
-            while (c != Eof && char.IsDigit(c)) {
+            while (c != Eof) {
+                if (c == '.') {
+                    isDouble = true;
+                }
+                else if (!char.IsDigit(c)) {
+                    break;
+                }
                 res.Append(c);
                 GetChar();
                 c = PeekChar();
             }
-            return new Token(res.ToString(), TokenType.IntegerType, CurrentLineNumber, CurrentLinePosition);
+            return new Token(res.ToString(), 
+                isDouble ? TokenType.DoubleType : TokenType.IntegerType, CurrentLineNumber, CurrentLinePosition);
         }
 
         private Token GetStringToken() {
@@ -189,6 +197,6 @@ namespace FadeJson
             }
         }
 
-        private char PeekChar() => (char) textReader.Peek();
+        private char PeekChar() => (char)textReader.Peek();
     }
 }

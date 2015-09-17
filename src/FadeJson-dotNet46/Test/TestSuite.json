@@ -8,6 +8,7 @@
   "licenseUrl": "https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md",
   "iconUrl": "http://www.newtonsoft.com/content/images/nugeticon.png",
   "language": "en-US",
+  "doubleTest": 1.2,
 
   "frameworks": {
     "dotnet": {
