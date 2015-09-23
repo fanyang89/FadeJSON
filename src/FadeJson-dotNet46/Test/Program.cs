@@ -90,9 +90,9 @@ namespace Test
             var jsonDotNet = JsonDotNetTest();
             Console.WriteLine("Json.NET Test: {0}ms", jsonDotNet);
 
-            CorrectnessTest();
+            //CorrectnessTest();
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }

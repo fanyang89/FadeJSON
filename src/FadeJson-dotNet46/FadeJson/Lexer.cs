@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace FadeJson
@@ -50,12 +51,24 @@ namespace FadeJson
                 GetChar();
                 return NextToken();
             }
+            if (c == '/') {
+                GetChar();
+                c = PeekChar();
+                if (c == '/') {
+                    GetChar();
+                    JumpToLineEnd();
+                    return NextToken();
+                }
+            }
             if (KeyCharList.Contains(new string(c, 1))) {
                 GetChar();
                 return new Token(c, TokenType.SyntaxType, CurrentLineNumber, CurrentLinePosition);
             }
             if (char.IsDigit(c)) {
                 return GetNumberToken();
+            }
+            if (c == '@') {
+                return GetOriginalStringToken();
             }
             if (c == '"') {
                 return GetStringToken();
@@ -134,8 +147,76 @@ namespace FadeJson
                 GetChar();
                 c = PeekChar();
             }
-            return new Token(res.ToString(), 
+            return new Token(res.ToString(),
                 isDouble ? TokenType.DoubleType : TokenType.IntegerType, CurrentLineNumber, CurrentLinePosition);
+        }
+
+        private void JumpToLineEnd() {
+            var c = PeekChar();
+            while (c != '\n') {
+                GetChar();
+                c = PeekChar();
+            }
+        }
+
+        private Token GetOriginalStringToken() {
+            var isDocString = false;
+            var c = GetChar();
+            if (c == Eof || c != '@') {
+                throw new InvalidOperationException("Internal: parsing original string?");
+            }
+
+            c = PeekChar();
+            if (c == Eof || c != '\"') {
+                throw new InvalidOperationException("Internal: parsing original string?");
+            }
+            GetChar();
+
+            c = PeekChar();
+            if (c == '\"') {
+                GetChar();
+                c = PeekChar();
+                if (c == '\"') {
+                    GetChar();
+                    isDocString = true;
+                    c = PeekChar();
+                }
+            }
+
+            var result = new StringBuilder();
+            while (true) {
+                if (c == Eof) {
+                    throw new InvalidOperationException("Hit EOF in String literal.");
+                }
+                var quotesCount = 0;
+                if (c == '\"') {
+                    GetChar();
+                    if (!isDocString) {
+                        return new Token(result.ToString(), TokenType.StringType,
+                            CurrentLineNumber, CurrentLinePosition);
+                    }
+                    quotesCount++;
+
+                    c = PeekChar();
+                    if (c == '\"') {
+                        quotesCount++;
+                        GetChar();
+                        c = PeekChar();
+                        if (c == '\"') {
+                            quotesCount++;
+                            GetChar();
+                        }
+                    }
+                    if (quotesCount == 3) {
+                        return new Token(result.ToString(), TokenType.StringType,
+                            CurrentLineNumber, CurrentLinePosition);
+                    }
+                    result.Append('\"', quotesCount);
+                }
+                result.Append(c);
+                GetChar();
+                c = PeekChar();
+            }
         }
 
         private Token GetStringToken() {
@@ -167,26 +248,20 @@ namespace FadeJson
                 else if (escape) {
                     escape = false;
                     GetChar();
-                    switch (c) {
-                        case 'n':
-                            res.Append('\n');
-                            break;
-
-                        case 't':
-                            res.Append('\t');
-                            break;
-
-                        case 'r':
-                            res.Append('\r');
-                            break;
-
-                        case '\"':
-                            res.Append('\"');
-                            break;
-
-                        case '\\':
-                            res.Append('\\');
-                            break;
+                    if (c == 'n') {
+                        res.Append('\n');
+                    }
+                    else if (c == 't') {
+                        res.Append('\t');
+                    }
+                    else if (c == 'r') {
+                        res.Append('\r');
+                    }
+                    else if (c == '\"') {
+                        res.Append('\"');
+                    }
+                    else if (c == '\\') {
+                        res.Append('\\');
                     }
                 }
                 else {
