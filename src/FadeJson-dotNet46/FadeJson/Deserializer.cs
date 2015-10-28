@@ -2,7 +2,7 @@
 
 namespace FadeJson
 {
-    public class Deserializer
+    public static class Deserializer
     {
         public static JsonValue Parse(object obj) {
             var j = new JsonValue(JsonValueType.Object);

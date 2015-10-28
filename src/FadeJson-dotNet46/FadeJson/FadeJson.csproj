@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonCache.cs" />
     <Compile Include="Deserializer.cs" />
+    <Compile Include="IErrorMessageSource.cs" />
     <Compile Include="JsonValue.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="ParseHelper.cs" />

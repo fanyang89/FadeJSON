@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FadeJson
 {
-    public class ParseHelper
+    public class ParseHelper : IErrorMessageSource
     {
         private readonly List<Token> tokenQueue = new List<Token>();
 
@@ -12,7 +12,6 @@ namespace FadeJson
 
         public int LineNumber => Lexer.CurrentLineNumber;
         public int LinePosition => Lexer.CurrentLinePosition;
-
         private Lexer Lexer { get; }
 
         private Token? NextToken {
@@ -24,6 +23,34 @@ namespace FadeJson
                 tokenQueue.RemoveAt(0);
                 return token;
             }
+        }
+
+        public Token? Consume() {
+            return NextToken;
+        }
+
+        public Token? Consume(TokenType tokenType) {
+            var token = NextToken;
+            if (token == null) {
+                return null;
+            }
+            if (token.Value.TokenType == tokenType) {
+                return token;
+            }
+            RollbackToken(token);
+            return null;
+        }
+
+        public Token? Consume(TokenType tokenType, string value) {
+            var token = NextToken;
+            if (token == null) {
+                return null;
+            }
+            if (token.Value.TokenType == tokenType && token.Value.Value == value) {
+                return token;
+            }
+            RollbackToken(token);
+            return null;
         }
 
         public bool MatchToken(TokenType tokenType, string value) {
@@ -40,41 +67,12 @@ namespace FadeJson
             return false;
         }
 
-        public Token? UsingToken() {
-            var token = NextToken;
-            return token;
-        }
-
-        public Token? UsingToken(TokenType tokenType) {
-            var token = NextToken;
-            if (token == null) {
-                return null;
-            }
-            if (token.Value.TokenType == tokenType) {
-                return token;
-            }
-            RollbackToken(token);
-            return null;
-        }
-
-        public Token? UsingToken(TokenType tokenType, string value) {
-            var token = NextToken;
-            if (token == null) {
-                return null;
-            }
-            if (token.Value.TokenType == tokenType && token.Value.Value == value) {
-                return token;
-            }
-            RollbackToken(token);
-            return null;
-        }
-
         /// <summary>
         ///     返回除了给定token类型的token
         /// </summary>
-        /// <param name="tokenType">排除列表</param>
+        /// <param name="tokenType">要排除的指定类型的token</param>
         /// <returns></returns>
-        public Token? UsingTokenExpect(TokenType tokenType) {
+        public Token? ConsumeExpect(TokenType tokenType) {
             var token = NextToken;
             if (token == null) {
                 return null;

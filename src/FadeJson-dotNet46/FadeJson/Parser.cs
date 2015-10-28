@@ -24,17 +24,17 @@ namespace FadeJson
 
         private JsonValue ParseJsonArray() {
             var result = new JsonValue(JsonValueType.Array);
-            parseSupporter.UsingToken(TokenType.Symbol, "[");
+            parseSupporter.Consume(TokenType.Symbol, "[");
 
             var value = ParseValue();
             var index = 0;
             while (value != null) {
                 result.AddKeyValue(index++, value);
-                parseSupporter.UsingToken(TokenType.Symbol, ",");
+                parseSupporter.Consume(TokenType.Symbol, ",");
                 value = ParseValue();
             }
 
-            parseSupporter.UsingToken(TokenType.Symbol, "]");
+            parseSupporter.Consume(TokenType.Symbol, "]");
 
             return result;
         }
@@ -42,29 +42,29 @@ namespace FadeJson
         private JsonValue ParseJsonObject() {
             var j = new JsonValue(JsonValueType.Object);
 
-            parseSupporter.UsingToken(TokenType.Symbol, "{");
+            parseSupporter.Consume(TokenType.Symbol, "{");
 
             var pair = ParsePair();
             while (pair != null) {
                 j.AddKeyValue(pair);
-                parseSupporter.UsingToken(TokenType.Symbol, ",");
+                parseSupporter.Consume(TokenType.Symbol, ",");
                 pair = ParsePair();
             }
 
-            parseSupporter.UsingToken(TokenType.Symbol, "}");
+            parseSupporter.Consume(TokenType.Symbol, "}");
             return j;
         }
 
         private KeyValuePair<object, JsonValue>? ParsePair() {
             string key;
             {
-                var token = parseSupporter.UsingToken(TokenType.String);
+                var token = parseSupporter.Consume(TokenType.String);
                 if (token == null) {
                     return null;
                 }
                 key = token.Value.Value;
             }
-            parseSupporter.UsingToken(TokenType.Symbol, ":");
+            parseSupporter.Consume(TokenType.Symbol, ":");
             var value = ParseValue();
             if (value == null) {
                 return null;
@@ -80,7 +80,7 @@ namespace FadeJson
                 return ParseJsonArray();
             }
             {
-                var token = parseSupporter.UsingTokenExpect(TokenType.Symbol);
+                var token = parseSupporter.ConsumeExpect(TokenType.Symbol);
                 return token?.RealValue;
             }
         }

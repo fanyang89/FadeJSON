@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 
 namespace FadeJson
@@ -10,8 +9,8 @@ namespace FadeJson
     {
         public const char Eof = unchecked((char)-1);
 
-        private const string EmptyCharList = " \r\n\t";
-        private const string KeyCharList = "{}:,[]";
+        private const string EMPTY_CHAR_LIST = " \r\n\t";
+        private const string KEY_CHAR_LIST = "{}:,[]";
         private readonly TextReader textReader;
 
         private Lexer(Stream stream) {
@@ -42,26 +41,21 @@ namespace FadeJson
         }
 
         public Token? NextToken() {
-            var c = PeekChar();
+            var c = Peek();
             if (c == '\n') {
                 CurrentLineNumber++;
                 CurrentLinePosition = 0;
             }
-            if (EmptyCharList.Contains(new string(c, 1))) {
-                GetChar();
+            if (EMPTY_CHAR_LIST.Contains(new string(c, 1))) {
+                Consume();
                 return NextToken();
             }
             if (c == '/') {
-                GetChar();
-                c = PeekChar();
-                if (c == '/') {
-                    GetChar();
-                    JumpToLineEnd();
-                    return NextToken();
-                }
+                SkipComment();
+                return NextToken();
             }
-            if (KeyCharList.Contains(new string(c, 1))) {
-                GetChar();
+            if (KEY_CHAR_LIST.Contains(new string(c, 1))) {
+                Consume();
                 return new Token(c, TokenType.Symbol, CurrentLineNumber, CurrentLinePosition);
             }
             if (char.IsDigit(c)) {
@@ -76,66 +70,48 @@ namespace FadeJson
             if (c == 't' || c == 'f') {
                 return GetBoolToken();
             }
-
             return null;
         }
 
-        private Token? GetBoolToken() {
-            var c = PeekChar();
-            if (c == 't') {
-                GetChar();
-                c = PeekChar();
-                if (c == 'r') {
-                    GetChar();
-                    c = PeekChar();
-                    if (c == 'u') {
-                        GetChar();
-                        c = PeekChar();
-                        if (c == 'e') {
-                            GetChar();
-                            return new Token("true", TokenType.Bool, CurrentLineNumber, CurrentLinePosition);
-                        }
-                    }
-                }
-            }
-            if (c == 'f') {
-                GetChar();
-                c = PeekChar();
-                if (c == 'a') {
-                    GetChar();
-                    c = PeekChar();
-                    if (c == 'l') {
-                        GetChar();
-                        c = PeekChar();
-                        if (c == 's') {
-                            GetChar();
-                            c = PeekChar();
-                            if (c == 'e') {
-                                GetChar();
-                                return new Token("false", TokenType.Bool, CurrentLineNumber, CurrentLinePosition);
-                            }
-                        }
-                    }
-                }
-            }
-            throw new FormatException();
-        }
+        private char Peek() => (char)textReader.Peek();
 
-        private char GetChar() {
+        public char Consume() {
             CurrentLinePosition++;
             return (char)textReader.Read();
         }
 
+        public bool Consume(string value) {
+            for (int i = 0; i < value.Length; i++) {
+                var c = Peek();
+                if (c != value[i]) {
+                    return false;
+                }
+                Consume();
+            }
+            return true;
+        }
+
+        private Token? GetBoolToken() {
+            var c = Peek();
+            if (c == 't' && Consume("true")) {
+                return new Token("true", TokenType.Bool, CurrentLineNumber, CurrentLinePosition);
+            }
+            if (c == 'f' && Consume("false")) {
+                return new Token("false", TokenType.Bool, CurrentLineNumber, CurrentLinePosition);
+            }
+            throw new FormatException();
+        }
+
         private Token GetNumberToken() {
-            // Check integrity before loop to avoid accidently returning zero.
-            var c = GetChar();
+            // Check integrity before loop to avoid accidentally returning zero.
+            var c = Consume();
             if (c == Eof || !char.IsDigit(c)) {
-                throw new InvalidOperationException("Internal: lexing number?");
+                throw new InvalidOperationException("Internal: tokenize number?");
             }
             var res = new StringBuilder();
             var isDouble = false;
             res.Append(c);
-            c = PeekChar();
+            c = Peek();
             while (c != Eof) {
                 if (c == '.') {
                     isDouble = true;
@@ -144,42 +120,34 @@ namespace FadeJson
                     break;
                 }
                 res.Append(c);
-                GetChar();
-                c = PeekChar();
+                Consume();
+                c = Peek();
             }
             return new Token(res.ToString(),
                 isDouble ? TokenType.Double : TokenType.Integer, CurrentLineNumber, CurrentLinePosition);
         }
 
-        private void JumpToLineEnd() {
-            var c = PeekChar();
-            while (c != '\n') {
-                GetChar();
-                c = PeekChar();
-            }
-        }
-
         private Token GetOriginalStringToken() {
             var isDocString = false;
-            var c = GetChar();
+            var c = Consume();
             if (c == Eof || c != '@') {
                 throw new InvalidOperationException("Internal: parsing original string?");
             }
 
-            c = PeekChar();
+            c = Peek();
             if (c == Eof || c != '\"') {
                 throw new InvalidOperationException("Internal: parsing original string?");
             }
-            GetChar();
+            Consume();
 
-            c = PeekChar();
+            c = Peek();
             if (c == '\"') {
-                GetChar();
-                c = PeekChar();
+                Consume();
+                c = Peek();
                 if (c == '\"') {
-                    GetChar();
+                    Consume();
                     isDocString = true;
-                    c = PeekChar();
+                    c = Peek();
                 }
             }
 
@@ -190,21 +158,21 @@ namespace FadeJson
                 }
                 var quotesCount = 0;
                 if (c == '\"') {
-                    GetChar();
+                    Consume();
                     if (!isDocString) {
                         return new Token(result.ToString(), TokenType.String,
                             CurrentLineNumber, CurrentLinePosition);
                     }
                     quotesCount++;
 
-                    c = PeekChar();
+                    c = Peek();
                     if (c == '\"') {
                         quotesCount++;
-                        GetChar();
-                        c = PeekChar();
+                        Consume();
+                        c = Peek();
                         if (c == '\"') {
                             quotesCount++;
-                            GetChar();
+                            Consume();
                         }
                     }
                     if (quotesCount == 3) {
@@ -214,20 +182,20 @@ namespace FadeJson
                     result.Append('\"', quotesCount);
                 }
                 result.Append(c);
-                GetChar();
-                c = PeekChar();
+                Consume();
+                c = Peek();
             }
         }
 
         private Token GetStringToken() {
-            var c = GetChar();
+            var c = Consume();
             if (c == Eof || c != '\"') {
                 throw new InvalidOperationException(
                     "Internal: parsing string?");
             }
             var res = new StringBuilder();
             var escape = false;
-            c = PeekChar();
+            c = Peek();
             while (true) {
                 if (c == Eof) {
                     throw new InvalidOperationException(
@@ -238,16 +206,16 @@ namespace FadeJson
                         "Hit newline in string literal");
                 }
                 if (c == '\\' && !escape) {
-                    GetChar();
+                    Consume();
                     escape = true;
                 }
                 else if (c == '"' && !escape) {
-                    GetChar();
+                    Consume();
                     return new Token(res.ToString(), TokenType.String, CurrentLineNumber, CurrentLinePosition);
                 }
                 else if (escape) {
                     escape = false;
-                    GetChar();
+                    Consume();
                     if (c == 'n') {
                         res.Append('\n');
                     }
@@ -265,13 +233,27 @@ namespace FadeJson
                     }
                 }
                 else {
-                    GetChar();
+                    Consume();
                     res.Append(c);
                 }
-                c = PeekChar();
+                c = Peek();
             }
         }
 
-        private char PeekChar() => (char)textReader.Peek();
+        private void JumpToLineEnd() {
+            var c = Peek();
+            while (c != '\n') {
+                Consume();
+                c = Peek();
+            }
+        }
+
+        private void SkipComment() {
+            Consume();
+            if (Peek() == '/') {
+                Consume();
+                JumpToLineEnd();
+            }
+        }
     }
 }

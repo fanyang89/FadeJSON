@@ -9,6 +9,7 @@
   "iconUrl": "http://www.newtonsoft.com/content/images/nugeticon.png",
   "language": "en-US",
   "doubleTest": 1.2,
+  "boolTest": false,
 
   "frameworks": {
     "dotnet": {
