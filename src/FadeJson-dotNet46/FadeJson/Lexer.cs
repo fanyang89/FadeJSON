@@ -62,7 +62,7 @@ namespace FadeJson
             }
             if (KeyCharList.Contains(new string(c, 1))) {
                 GetChar();
-                return new Token(c, TokenType.SyntaxType, CurrentLineNumber, CurrentLinePosition);
+                return new Token(c, TokenType.Symbol, CurrentLineNumber, CurrentLinePosition);
             }
             if (char.IsDigit(c)) {
                 return GetNumberToken();
@@ -93,7 +93,7 @@ namespace FadeJson
                         c = PeekChar();
                         if (c == 'e') {
                             GetChar();
-                            return new Token("true", TokenType.BoolType, CurrentLineNumber, CurrentLinePosition);
+                            return new Token("true", TokenType.Bool, CurrentLineNumber, CurrentLinePosition);
                         }
                     }
                 }
@@ -112,7 +112,7 @@ namespace FadeJson
                             c = PeekChar();
                             if (c == 'e') {
                                 GetChar();
-                                return new Token("false", TokenType.BoolType, CurrentLineNumber, CurrentLinePosition);
+                                return new Token("false", TokenType.Bool, CurrentLineNumber, CurrentLinePosition);
                             }
                         }
                     }
@@ -148,7 +148,7 @@ namespace FadeJson
                 c = PeekChar();
             }
             return new Token(res.ToString(),
-                isDouble ? TokenType.DoubleType : TokenType.IntegerType, CurrentLineNumber, CurrentLinePosition);
+                isDouble ? TokenType.Double : TokenType.Integer, CurrentLineNumber, CurrentLinePosition);
         }
 
         private void JumpToLineEnd() {
@@ -192,7 +192,7 @@ namespace FadeJson
                 if (c == '\"') {
                     GetChar();
                     if (!isDocString) {
-                        return new Token(result.ToString(), TokenType.StringType,
+                        return new Token(result.ToString(), TokenType.String,
                             CurrentLineNumber, CurrentLinePosition);
                     }
                     quotesCount++;
@@ -208,7 +208,7 @@ namespace FadeJson
                         }
                     }
                     if (quotesCount == 3) {
-                        return new Token(result.ToString(), TokenType.StringType,
+                        return new Token(result.ToString(), TokenType.String,
                             CurrentLineNumber, CurrentLinePosition);
                     }
                     result.Append('\"', quotesCount);
@@ -243,7 +243,7 @@ namespace FadeJson
                 }
                 else if (c == '"' && !escape) {
                     GetChar();
-                    return new Token(res.ToString(), TokenType.StringType, CurrentLineNumber, CurrentLinePosition);
+                    return new Token(res.ToString(), TokenType.String, CurrentLineNumber, CurrentLinePosition);
                 }
                 else if (escape) {
                     escape = false;

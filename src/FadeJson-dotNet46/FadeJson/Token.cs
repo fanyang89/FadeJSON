@@ -4,11 +4,11 @@ namespace FadeJson
 {
     public enum TokenType
     {
-        IntegerType,
-        StringType,
-        SyntaxType,
-        BoolType,
-        DoubleType
+        Integer,
+        String,
+        Symbol,
+        Bool,
+        Double
     }
 
     public struct Token
@@ -39,17 +39,17 @@ namespace FadeJson
         public JsonValue RealValue {
             get {
                 switch (TokenType) {
-                    case TokenType.IntegerType:
+                    case TokenType.Integer:
                         return Convert.ToInt32(Value);
 
-                    case TokenType.StringType:
-                    case TokenType.SyntaxType:
+                    case TokenType.String:
+                    case TokenType.Symbol:
                         return Value;
 
-                    case TokenType.BoolType:
+                    case TokenType.Bool:
                         return Value == "true";
 
-                    case TokenType.DoubleType:
+                    case TokenType.Double:
                         return double.Parse(Value);
 
                     default:

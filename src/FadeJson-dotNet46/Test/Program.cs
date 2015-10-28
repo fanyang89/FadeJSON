@@ -92,7 +92,7 @@ namespace Test
 
             //CorrectnessTest();
 
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 }
