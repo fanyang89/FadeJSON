@@ -1,6 +1,11 @@
 #FadeJson
 代码简洁易读的Json Parser。
 
+[FadeJson in GitHub](https://github.com/YangFan789/FadeJson)
+[FadeJson in GitOSC](http://git.oschina.net/fuis/FadeJson)
+
+<script src='http://git.oschina.net/fuis/FadeJson/star_widget_preview'></script><script src='http://git.oschina.net/fuis/FadeJson/fork_widget_preview'></script>
+
 ## 用法
 
 ###FadeJson
