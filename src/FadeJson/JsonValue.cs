@@ -25,7 +25,7 @@ namespace FadeJson
             dictionary = null;
             list = null;
             Value = string.Empty;
-            Type = JsonType.Null;
+            Type = type;
             switch (type) {
                 case JsonType.Array:
                     list = new List<JsonValue>();

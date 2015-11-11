@@ -4,14 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Numerics;
 
 namespace FadeJson
 {
     public class Tokenizer
     {
         const string WHITE_CHAR_LIST = " \r\t\n";
-        private readonly string keywordCharList = ":,{}[]";
+        private const string KEYWORD_CHAR_LIST = ":,{}[]";
         private readonly JsonValue[] keywordValueList ={
             JsonValue.Colon,
             JsonValue.Comma,
@@ -40,7 +39,7 @@ namespace FadeJson
                 return GetNextToken();
             }
 
-            var keywordIndex = keywordCharList.IndexOf(c);
+            var keywordIndex = KEYWORD_CHAR_LIST.IndexOf(c);
             if (keywordIndex != -1) {
                 cache.Next();
                 return keywordValueList[keywordIndex];
@@ -64,6 +63,7 @@ namespace FadeJson
         readonly StringBuilder sb = new StringBuilder(64);
 
         private JsonValue ParseStringToken() {
+
             cache.Next();
             var c = cache.Next();
             while (true) {
@@ -82,14 +82,9 @@ namespace FadeJson
                     c = cache.Next();
                 }
             }
-
-            var val = sb.ToString();
+            var j = new JsonValue(JsonType.String) { Value = sb.ToString() };
             sb.Clear();
-
-            return new JsonValue {
-                Value = val,
-                Type = JsonType.String
-            };
+            return j;
         }
 
         private readonly char[] unicodeCache = new char[4];
