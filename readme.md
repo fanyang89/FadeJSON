@@ -4,7 +4,8 @@
 [FadeJson in GitHub](https://github.com/YangFan789/FadeJson)
 [FadeJson in GitOSC](http://git.oschina.net/fuis/FadeJson)
 
-<script src='http://git.oschina.net/fuis/FadeJson/star_widget_preview'></script><script src='http://git.oschina.net/fuis/FadeJson/fork_widget_preview'></script>
+<script src='http://git.oschina.net/fuis/FadeJson/star_widget_preview'></script>
+<script src='http://git.oschina.net/fuis/FadeJson/fork_widget_preview'></script>
 
 ## 用法
 
@@ -32,26 +33,24 @@ FadeJson.ExportClass example.json MyNamespace
 生成的实体类在`FadeJson.ExportClass.exe`所在的目录中，添加到工程即可使用。
 
 ## 性能
-总体来说，FadeJson在读取较小的Json文件时比Json.NET快速。
-
-但读取大Json文件时，由于触发了过多的GC，导致其读取大文件时慢于Json.NET。
+FadeJson在读取较小的Json文件时比Json.NET快速。
 
 ### 测试
-.NET FX 4.6, Release配置编译。读取相同的Json文件。
+.NET Framework 4.6, Release配置编译。读取相同的Json文件。
 每轮测试迭代10次，取平均值。单位毫秒。耗时越短越好。
 
 #### 大文件（3660KiB）
 
 |FadeJson3|Json.NET|
 |---------|--------|
-|4868ms   |1579ms  |
-|4915ms   |1655ms  |
-|4857ms   |1566ms  |
+|1714ms|1312ms|
+|1722ms|1315ms|
+|1750ms|1314ms|
 
 #### 小文件（2KiB）
 
 |FadeJson3|Json.NET|
 |---------|--------|
-|3ms      |7ms     |
-|3ms      |6ms     |
-|3ms      |8ms     |
+|13ms|45ms|
+|13ms|46ms|
+|13ms|46ms|

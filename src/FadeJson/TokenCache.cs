@@ -8,7 +8,7 @@ namespace FadeJson
     {
         private readonly Tokenizer tokenizer;
 
-        public TokenCache(Tokenizer tokenizer, int size = 32) {
+        public TokenCache(Tokenizer tokenizer, int size = 2) {
             this.tokenizer = tokenizer;
             bufferMax = size;
             buffer = new JsonValue[2 * size];
@@ -59,7 +59,7 @@ namespace FadeJson
         private void FlushBuffer(int from, int to) {
             for (int i = from; i < to; i++) {
                 buffer[i] = tokenizer.GetNextToken();
-                if (buffer[i] == null) {
+                if (buffer[i].Type == JsonType.Null) {
                     break;
                 }
             }

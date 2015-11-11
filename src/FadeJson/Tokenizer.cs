@@ -4,14 +4,22 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Numerics;
 
 namespace FadeJson
 {
     public class Tokenizer
     {
         const string WHITE_CHAR_LIST = " \r\t\n";
-        private const string KEYWORD_CHAR_LIST = ":,{}[]";
-        private static readonly string Terminal = WHITE_CHAR_LIST + KEYWORD_CHAR_LIST + EOF;
+        private readonly string keywordCharList = ":,{}[]";
+        private readonly JsonValue[] keywordValueList ={
+            JsonValue.Colon,
+            JsonValue.Comma,
+            JsonValue.LeftBrace,
+            JsonValue.RightBrace,
+            JsonValue.LeftBracket,
+            JsonValue.RightBracket
+        };
         private readonly ICommonCache<char, TextReader> cache;
         private const char EOF = unchecked((char)-1);
 
@@ -20,47 +28,47 @@ namespace FadeJson
         }
 
         public JsonValue GetNextToken() {
-            var c = cache.Lookahead().ToString();
+            var c = cache.Lookahead();
 
             if (WHITE_CHAR_LIST.Contains(c)) {
                 cache.Next();
                 return GetNextToken();
             }
+
             if (cache.Check("//")) {
                 GotoLineEnd();
                 return GetNextToken();
             }
 
-            if (KEYWORD_CHAR_LIST.Contains(c)) {
+            var keywordIndex = keywordCharList.IndexOf(c);
+            if (keywordIndex != -1) {
                 cache.Next();
-                return new JsonValue {
-                    Value = c,
-                    Type = JsonType.Symbol
-                };
+                return keywordValueList[keywordIndex];
             }
 
             if ("tfn".Contains(c)) {
                 return ParseKeywordToken();
             }
 
-            if (c == "\"") {
+            if (c == '\"') {
                 return ParseStringToken();
             }
 
-            if (c.IsNumber()) {
+            if (c.IsNumber() || c == '-') {
                 return ParseNumberToken();
             }
 
             return JsonValue.Null;
         }
 
+        readonly StringBuilder sb = new StringBuilder(64);
+
         private JsonValue ParseStringToken() {
             cache.Next();
             var c = cache.Next();
-            var list = new List<string>();
             while (true) {
                 if (c == '\\') {
-                    list.Add(ParseEscapeChar());
+                    sb.Append(ParseEscapeChar());
                     c = cache.Next();
                 }
                 else if (c == '\n') {
@@ -70,20 +78,25 @@ namespace FadeJson
                     break;
                 }
                 else {
-                    list.Add(new string(c, 1));
+                    sb.Append(c);
                     c = cache.Next();
                 }
             }
 
+            var val = sb.ToString();
+            sb.Clear();
+
             return new JsonValue {
-                Value = string.Concat(list),
+                Value = val,
                 Type = JsonType.String
             };
         }
 
-        private string ParseEscapeChar() {
-            var escList = new[] { "n", "b", "f", "r", "t", "\"", "/", "\\" };
-            var afterEsc = new[] { "\n", "\b", "\f", "\r", "\t", "\"", "/", "\\" };
+        private readonly char[] unicodeCache = new char[4];
+        private readonly string[] escList = { "n", "b", "f", "r", "t", "\"", "/", "\\" };
+        private readonly char[] afterEsc = { '\n', '\b', '\f', '\r', '\t', '\'', '/', '\\' };
+
+        private char ParseEscapeChar() {
             for (var i = 0; i < escList.Length; i++) {
                 if (!cache.Check(escList[i])) continue;
                 cache.Next();
@@ -93,16 +106,16 @@ namespace FadeJson
             if (!cache.Check("u")) throw new FormatException();
 
             cache.Next();
-            char[] t = new char[4];
             for (int i = 0; i < 4; i++) {
-                t[i] = cache.Next();
+                unicodeCache[i] = cache.Next();
             }
-            return ((char)(int.Parse(string.Concat(t), NumberStyles.HexNumber))).ToString();
+            return (char)(int.Parse(string.Concat(unicodeCache), NumberStyles.HexNumber));
         }
 
+        private readonly string[] keywordList = { "true", "false", "null" };
+        private readonly JsonValue[] valueList = { JsonValue.True, JsonValue.False, JsonValue.Null };
+
         private JsonValue ParseKeywordToken() {
-            string[] keywordList = { "true", "false", "null" };
-            JsonValue[] valueList = { JsonValue.True, JsonValue.False, JsonValue.Null };
             for (var i = 0; i < keywordList.Length; i++) {
                 var keyword = keywordList[i];
                 if (!cache.Check(keyword)) continue;
@@ -112,9 +125,10 @@ namespace FadeJson
             throw new FormatException();
         }
 
+        readonly char[] number = new char[32];
         private JsonValue ParseNumberToken() {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(cache.Next());
+            int pos = 0;
+            number[0] = cache.Next();
             var isDouble = false;
 
             var c = cache.Lookahead();
@@ -125,13 +139,13 @@ namespace FadeJson
                 else if (!char.IsDigit(c)) {
                     break;
                 }
-                stringBuilder.Append(c);
+                number[pos++] = c;
                 cache.Next();
                 c = cache.Lookahead();
             }
 
             return new JsonValue {
-                Value = stringBuilder.ToString(),
+                Value = string.Concat(number),
                 Type = isDouble ? JsonType.Double : JsonType.Int32
             };
         }

@@ -31,12 +31,11 @@ namespace FadeJson
 
         private JsonValue ParseJsonArray() {
             Consume("[");
-            var array = new JsonValue();
+            var array = new JsonValue(JsonType.Array) { Type = JsonType.Array };
             var la = cache.Lookahead();
-            int index = 0;
             while (la.Value != "]") {
                 var value = Parse();
-                array.Add(index++, value);
+                array.Add(value);
 
                 la = cache.Lookahead();
                 if (la.Value == "]" && la.Type == JsonType.Symbol) {
@@ -54,13 +53,13 @@ namespace FadeJson
                 throw new FormatException();
             }
 
-            var j = new JsonValue();
+            var j = new JsonValue(JsonType.Object);
             var la = cache.Lookahead();
             while (la.Value != "}") {
                 var key = cache.Next();
                 Consume(":");
                 var value = Parse();
-                j.Add(key, value);
+                j.Add(key.Value, value);
                 la = cache.Lookahead();
                 if (la.Value == "}" && la.Type == JsonType.Symbol) {
                     break;

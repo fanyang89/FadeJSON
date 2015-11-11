@@ -9,8 +9,8 @@ namespace FadeJson.Test
     {
         private static void Main(string[] args) {
             var testSuitePathList = new string[] {
-                "TestSuite/data.json",
-                "TestSuite/TestSuite.json"
+                "TestSuite/TestSuite.json",
+                "TestSuite/data.json"
             };
 
             foreach (var path in testSuitePathList) {
@@ -19,7 +19,9 @@ namespace FadeJson.Test
                     var jObject = JObject.Load(new JsonTextReader(new StreamReader(fileStream)));
                     fileStream.Dispose();
                 });
+            }
 
+            foreach (var path in testSuitePathList) {
                 CodeTimer.Execute($"FadeJson Test {path}", 10, () => {
                     var jsonValue = JsonValue.FromFile(path);
                 });

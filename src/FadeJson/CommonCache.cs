@@ -13,8 +13,8 @@ namespace FadeJson
         private int pos;
 
         private readonly int bufferMax;
-        
-        public CommonCache(TextReader textReader, int bufferSize = 128) {
+
+        public CommonCache(TextReader textReader, int bufferSize = 8) {
             this.textReader = textReader;
             bufferMax = bufferSize;
             buffer = new char[2 * bufferSize];

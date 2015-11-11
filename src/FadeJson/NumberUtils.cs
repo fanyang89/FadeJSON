@@ -10,11 +10,8 @@
         }
 
         public static bool IsNumber(this char chr) {
-            return IsNumber(chr.ToString());
+            return '0' <= chr && chr <= '9';
         }
-
-        public static bool IsNumber(this string str) {
-            return "0123456789".Contains(str);
-        }
+        
     }
 }

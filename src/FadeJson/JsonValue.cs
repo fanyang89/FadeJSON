@@ -1,41 +1,66 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
+using System.Runtime;
 
 namespace FadeJson
 {
-    public class JsonValue
+    public struct JsonValue
     {
         public static readonly JsonValue Null = new JsonValue { Value = null, Type = JsonType.Null };
-        public static readonly JsonValue True = new JsonValue() { Value = "true", Type = JsonType.Boolean };
-        public static readonly JsonValue False = new JsonValue() { Value = "false", Type = JsonType.Boolean };
+        public static readonly JsonValue True = new JsonValue { Value = "true", Type = JsonType.Boolean };
+        public static readonly JsonValue False = new JsonValue { Value = "false", Type = JsonType.Boolean };
+        public static readonly JsonValue Colon = new JsonValue { Value = ":", Type = JsonType.Symbol };
+        public static readonly JsonValue LeftBrace = new JsonValue { Value = "{", Type = JsonType.Symbol };
+        public static readonly JsonValue RightBrace = new JsonValue { Value = "}", Type = JsonType.Symbol };
+        public static readonly JsonValue LeftBracket = new JsonValue { Value = "[", Type = JsonType.Symbol };
+        public static readonly JsonValue RightBracket = new JsonValue { Value = "]", Type = JsonType.Symbol };
+        public static readonly JsonValue Comma = new JsonValue { Value = ",", Type = JsonType.Symbol };
 
-        private readonly Dictionary<string, JsonValue> dictionary = new Dictionary<string, JsonValue>();
+        private readonly Dictionary<object, JsonValue> dictionary;
+        private readonly List<JsonValue> list;
+
+        public JsonValue(JsonType type) {
+            dictionary = null;
+            list = null;
+            Value = string.Empty;
+            Type = JsonType.Null;
+            switch (type) {
+                case JsonType.Array:
+                    list = new List<JsonValue>();
+                    Type = JsonType.Array;
+                    break;
+                case JsonType.Object:
+                    dictionary = new Dictionary<object, JsonValue>();
+                    Type = JsonType.Object;
+                    break;
+            }
+        }
 
         public JsonType Type { get; set; }
-
         public string Value { get; set; }
 
         public int Count => dictionary.Count;
         public IEnumerable<JsonValue> Values => dictionary.Values;
-        public IEnumerable<string> Keys => dictionary.Keys;
+        public IEnumerable<object> Keys => dictionary.Keys;
 
-        public JsonValue this[string key] {
+        public JsonValue this[object key] {
             get { return dictionary[key]; }
             set { dictionary[key] = value; }
         }
 
-        public JsonValue this[object key] {
-            get { return this[key.ToString()]; }
-            set { dictionary[key.ToString()] = value; }
-        }
-
-        public void Add(object key, JsonValue value) {
-            dictionary.Add(key.ToString(), value);
+        public JsonValue this[int key] {
+            get { return list[key]; }
+            set { dictionary[key] = value; }
         }
 
         public void Add(string key, JsonValue value) {
             dictionary.Add(key, value);
+        }
+
+        public void Add(JsonValue value) {
+            list.Add(value);
         }
 
         public bool CheckValue(JsonType type, string value) {
