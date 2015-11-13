@@ -1,18 +1,27 @@
 ﻿//#define FEATURE_COMMENT_SURPPORT
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace FadeJson
 {
     public class Tokenizer
     {
+        private const char EOF = unchecked((char) -1);
+        private readonly char[] afterEsc = {'\n', '\b', '\f', '\r', '\t', '\'', '/', '\\'};
         private readonly ICommonCache<char, TextReader> cache;
-        private const char EOF = unchecked((char)-1);
+        private readonly string[] escList = {"n", "b", "f", "r", "t", "\"", "/", "\\"};
+
+        private readonly string[] keywordList = {"true", "false", "null"};
+
+        private readonly char[] number = new char[32];
+
+        private readonly StringBuilder sb = new StringBuilder(64);
+
+        private readonly char[] unicodeCache = new char[4];
+        private readonly JsonValue[] valueList = {JsonValue.True, JsonValue.False, JsonValue.Null};
 
         public Tokenizer(ICommonCache<char, TextReader> cache) {
             this.cache = cache;
@@ -86,7 +95,6 @@ namespace FadeJson
             }
         }
 
-        readonly StringBuilder sb = new StringBuilder(64);
         private JsonValue ParseStringToken() {
             cache.Next();
             var c = cache.Next();
@@ -106,14 +114,10 @@ namespace FadeJson
                     c = cache.Next();
                 }
             }
-            var j = new JsonValue(JsonType.String) { Value = sb.ToString() };
+            var j = new JsonValue(JsonType.String) {Value = sb.ToString()};
             sb.Clear();
             return j;
         }
-
-        private readonly char[] unicodeCache = new char[4];
-        private readonly string[] escList = { "n", "b", "f", "r", "t", "\"", "/", "\\" };
-        private readonly char[] afterEsc = { '\n', '\b', '\f', '\r', '\t', '\'', '/', '\\' };
 
         private char ParseEscapeChar() {
             for (var i = 0; i < escList.Length; i++) {
@@ -125,14 +129,11 @@ namespace FadeJson
             if (!cache.Check("u")) throw new FormatException();
 
             cache.Next();
-            for (int i = 0; i < 4; i++) {
+            for (var i = 0; i < 4; i++) {
                 unicodeCache[i] = cache.Next();
             }
-            return (char)(int.Parse(string.Concat(unicodeCache), NumberStyles.HexNumber));
+            return (char) (int.Parse(string.Concat(unicodeCache), NumberStyles.HexNumber));
         }
-
-        private readonly string[] keywordList = { "true", "false", "null" };
-        private readonly JsonValue[] valueList = { JsonValue.True, JsonValue.False, JsonValue.Null };
 
         private JsonValue ParseKeywordToken() {
             for (var i = 0; i < keywordList.Length; i++) {
@@ -144,9 +145,8 @@ namespace FadeJson
             throw new FormatException();
         }
 
-        readonly char[] number = new char[32];
         private JsonValue ParseNumberToken() {
-            int pos = 1;
+            var pos = 1;
             number[0] = cache.Next();
             number[1] = '\0';
 

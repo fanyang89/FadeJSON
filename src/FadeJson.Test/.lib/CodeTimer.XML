@@ -1,443 +1,449 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
+
 <doc>
-    <assembly>
-        <name>CodeTimer</name>
-    </assembly>
-    <members>
-        <member name="T:CodeTimerResult">
-            <summary>
-            表示 <see cref="T:CodeTimer"/> 执行结果的类.
-            </summary>
-        </member>
-        <member name="M:CodeTimerResult.#ctor">
-            <summary>
-            初始化 <see cref="T:CodeTimer"/> 类的新实例.
-            </summary>
-        </member>
-        <member name="M:CodeTimerResult.Reset">
-            <summary>
-            重置 <see cref="T:CodeTimer"/>.
-            </summary>
-            <returns>重置后的 <see cref="T:CodeTimer"/> 对象实例.</returns>
-        </member>
-        <member name="P:CodeTimerResult.Name">
-            <summary>
-            名称.
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.TimeElapsed">
-            <summary>
-            运行时间.
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.CPUCycles">
-            <summary>
-            Cpu 时钟周期.
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.GenerationList">
-            <summary>
-            GC 代数.
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.ThreadCount">
-            <summary>
-            线程的计数
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.Iteration">
-            <summary>
-            重复的次数.
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.MockThinkTime">
-            <summary>
-            模拟思考的时间.
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.SuccessCount">
-            <summary>
-            执行成功计数
-            </summary>
-        </member>
-        <member name="P:CodeTimerResult.FailureCount">
-            <summary>
-            执行失败计数
-            </summary>
-        </member>
-        <member name="T:CodeTimer">
-            <summary>
-            代码性能计时器.
-            </summary>
-        </member>
-        <member name="F:CodeTimer._IsDetail">
-            <summary>
-            是否输出详细的数据.
-            </summary>
-        </member>
-        <member name="M:CodeTimer.InitializeBySingle">
-            <summary>
-            单线程 Execute 方法的初始化.
-            </summary>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Action)">
-            <summary>
-            使用单线程的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="action">需要执行的方法体.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Func{System.Boolean})">
-            <summary>
-            使用单线程的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="func">需要执行的方法体.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Action,System.Action{System.String})">
-            <summary>
-            使用单线程的方式执行一个方法,并使用 <paramref name="Output"/> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="action">需要执行的方法体.</param>
-            <param name="Output">要写入的输出流.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Func{System.Boolean},System.Action{System.String})">
-            <summary>
-            使用单线程的方式执行一个方法,并使用 <paramref name="Output"/> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="func">需要执行的方法体.</param>
-            <param name="Output">要写入的输出流.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.InitializeByConcurrent">
-            <summary>
-            多线程并发 Execute 方法的初始化.
-            </summary>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Action)">
-            <summary>
-            使用多线程并发的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="threadCount">线程的计数.</param>
-            <param name="action">需要执行的方法体.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Func{System.Boolean})">
-            <summary>
-            使用多线程并发的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="threadCount">线程的计数.</param>
-            <param name="func">需要执行的方法体.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Action,System.Action{System.String})">
-            <summary>
-            使用多线程并发的方式执行一个方法,并使用 <paramref name="Output"/> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="threadCount">线程的计数.</param>
-            <param name="action">需要执行的方法体.</param>
-            <param name="Output">要写入的输出流.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Func{System.Boolean},System.Action{System.String})">
-            <summary>
-            使用多线程并发的方式执行一个方法,并使用 <paramref name="Output"/> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="threadCount">线程的计数.</param>
-            <param name="func">需要执行的方法体.</param>
-            <param name="Output">要写入的输出流.</param>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Int32,System.Action,System.Action{System.String})">
-            <summary>
-            使用多线程并发的方式执行一个方法,并使用 <paramref name="Output"/> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="threadCount">线程的计数.</param>
-            <param name="mockThinkTime">模拟思考的时间.</param>
-            <param name="action">需要执行的方法体.</param>
-            <param name="Output">要写入的输出流.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Int32,System.Func{System.Boolean},System.Action{System.String})">
-            <summary>
-            使用多线程并发的方式执行一个方法,并使用 <paramref name="Output"/> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
-            </summary>
-            <param name="name">名称.</param>
-            <param name="iteration">循环次数.</param>
-            <param name="threadCount">线程的计数.</param>
-            <param name="mockThinkTime">模拟思考的时间.</param>
-            <param name="func">需要执行的方法体.</param>
-            <param name="Output">要写入的输出流.</param>
-            <remarks>一个 <see cref="T:CodeTimerResult"/> 表示执行的结果.</remarks>
-        </member>
-        <member name="T:OSVersionType">
-            <summary>
-            操作系统类型.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.UnKnown">
-            <summary>
-            未知
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_3_1">
-            <summary>
-            Microsoft Windows 3.1
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_Me">
-            <summary>
-            Microsoft Windows Me.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_98_SecondEdition">
-            <summary>
-            Microsoft Windows 98 Second Edition.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_98">
-            <summary>
-            Microsoft Windows 98.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_95_OS_R2">
-            <summary>
-            Microsoft Windows 95 OS R2.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_95">
-            <summary>
-            Microsoft Windows 95.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_NT_3_5_1">
-            <summary>
-            Microsoft Windows NT 3.51.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_NT_4_0">
-            <summary>
-            Microsoft Windows NT 4.0.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_NT_4_0_Server">
-            <summary>
-            Microsoft Windows NT 4.0 Server.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_2000">
-            <summary>
-            Microsoft Windows 2000.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_XP">
-            <summary>
-            Microsoft Windows XP.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_Server_2003">
-            <summary>
-            Microsoft Windows Server 2003.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_Vista">
-            <summary>
-            Microsoft Windows Vista.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_7">
-            <summary>
-            Microsoft Windows 7.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_Server_2008">
-            <summary>
-            Microsoft Windows Server 2008.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_Server_2008_R2">
-            <summary>
-            Microsoft Windows Server 2008 R2.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Microsoft_Windows_CE">
-            <summary>
-            Microsoft Windows CE.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.Unix">
-            <summary>
-            Unix.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.MacOSX">
-            <summary>
-            MacOSX,基于 Unix 的增强版.
-            </summary>
-        </member>
-        <member name="F:OSVersionType.XBox_360">
-            <summary>
-            XBox 360
-            </summary>
-        </member>
-        <member name="T:EnvironmentHelper">
-            <summary>
-            提供有关当前环境和平台的信息以及操作它们的方法.
-            </summary>
-        </member>
-        <member name="F:EnvironmentHelper.CarriageReturnLineFeed">
-            <summary>
-            回车换行符
-            </summary>
-        </member>
-        <member name="F:EnvironmentHelper.Empty">
-            <summary>
-            空字符
-            </summary>
-        </member>
-        <member name="F:EnvironmentHelper.CarriageReturn">
-            <summary>
-            回车符
-            </summary>
-        </member>
-        <member name="F:EnvironmentHelper.LineFeed">
-            <summary>
-            换行符
-            </summary>
-        </member>
-        <member name="F:EnvironmentHelper.Tab">
-            <summary>
-            制表符
-            </summary>
-        </member>
-        <member name="P:EnvironmentHelper.OSEdition">
-            <summary>
-            当前系统的发行版本.类似 "Service Pack 2".
-            </summary>
-        </member>
-        <member name="P:EnvironmentHelper.OSName">
-            <summary>
-            获取当前计算机操作系统的版本名称.类似 "Microsoft Windows Server 2003".
-            </summary>
-        </member>
-        <member name="P:EnvironmentHelper.OSVersion">
-            <summary>
-            获取标识操作系统的 <see cref="P:EnvironmentHelper.OSVersion"/> 对象.
-            </summary>
-        </member>
-        <member name="P:EnvironmentHelper.OSVersionString">
-            <summary>
-            获取平台标识符、版本和当前安装在操作系统上的 Service Pack 的连接字符串表示形式.
-            </summary>
-        </member>
-        <member name="P:EnvironmentHelper.OSServicePack">
-            <summary>
-            获取当前操作系统补丁包的详细信息.类似 "Standard".
-            </summary>
-        </member>
-        <member name="P:EnvironmentHelper.IsGreaterThanOrEqualToVista">
-            <summary>
-            获取当前的系统是否是 Windows Vista (包含)以上.
-            </summary>
-        </member>
-        <member name="T:CodeTime.Properties.Resources">
-            <summary>
-              一个强类型的资源类，用于查找本地化的字符串等。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.ResourceManager">
-            <summary>
-              返回此类使用的缓存的 ResourceManager 实例。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.Culture">
-            <summary>
-              使用此强类型资源类，为所有资源查找
-              重写当前线程的 CurrentUICulture 属性。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.ChildThreadName">
-            <summary>
-              查找类似 {0} [ 线程 {1} ]{2} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.CPUCycles">
-            <summary>
-              查找类似     Cpu 时钟周期 :    {0} 纳秒 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.CPUGen">
-            <summary>
-              查找类似     GC 代数 {0}    :    {1} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.ExecuteFailureCount">
-            <summary>
-              查找类似     执行失败计数 :    {0} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.ExecuteSuccessCount">
-            <summary>
-              查找类似     执行成功计数 :    {0} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.IterationCount">
-            <summary>
-              查找类似     循环次数 : {0} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.MessageThan0">
-            <summary>
-              查找类似 必须大于 0. 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.MockThinkTime">
-            <summary>
-              查找类似  模拟思考时间 : {0} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.MultiThreadName">
-            <summary>
-              查找类似 {0} [多线程并发]{1} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.NameSuffix">
-            <summary>
-              查找类似  =&gt; 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.SingleThreadName">
-            <summary>
-              查找类似 {0} [单线程]{1} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.ThreadCount">
-            <summary>
-              查找类似  线程计数 : {0} 的本地化字符串。
-            </summary>
-        </member>
-        <member name="P:CodeTime.Properties.Resources.TimeElapsed">
-            <summary>
-              查找类似     运行时间     :    {0} 毫秒 的本地化字符串。
-            </summary>
-        </member>
-    </members>
+  <assembly>
+    <name>CodeTimer</name>
+  </assembly>
+  <members>
+    <member name="T:CodeTimerResult">
+      <summary>
+        表示 <see cref="T:CodeTimer" /> 执行结果的类.
+      </summary>
+    </member>
+    <member name="M:CodeTimerResult.#ctor">
+      <summary>
+        初始化 <see cref="T:CodeTimer" /> 类的新实例.
+      </summary>
+    </member>
+    <member name="M:CodeTimerResult.Reset">
+      <summary>
+        重置 <see cref="T:CodeTimer" />.
+      </summary>
+      <returns>重置后的 <see cref="T:CodeTimer" /> 对象实例.</returns>
+    </member>
+    <member name="P:CodeTimerResult.Name">
+      <summary>
+        名称.
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.TimeElapsed">
+      <summary>
+        运行时间.
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.CPUCycles">
+      <summary>
+        Cpu 时钟周期.
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.GenerationList">
+      <summary>
+        GC 代数.
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.ThreadCount">
+      <summary>
+        线程的计数
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.Iteration">
+      <summary>
+        重复的次数.
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.MockThinkTime">
+      <summary>
+        模拟思考的时间.
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.SuccessCount">
+      <summary>
+        执行成功计数
+      </summary>
+    </member>
+    <member name="P:CodeTimerResult.FailureCount">
+      <summary>
+        执行失败计数
+      </summary>
+    </member>
+    <member name="T:CodeTimer">
+      <summary>
+        代码性能计时器.
+      </summary>
+    </member>
+    <member name="F:CodeTimer._IsDetail">
+      <summary>
+        是否输出详细的数据.
+      </summary>
+    </member>
+    <member name="M:CodeTimer.InitializeBySingle">
+      <summary>
+        单线程 Execute 方法的初始化.
+      </summary>
+    </member>
+    <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Action)">
+      <summary>
+        使用单线程的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="action">需要执行的方法体.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Func{System.Boolean})">
+      <summary>
+        使用单线程的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="func">需要执行的方法体.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Action,System.Action{System.String})">
+      <summary>
+        使用单线程的方式执行一个方法,并使用 <paramref name="Output" /> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="action">需要执行的方法体.</param>
+      <param name="Output">要写入的输出流.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member
+      name="M:CodeTimer.Execute(System.String,System.Int32,System.Func{System.Boolean},System.Action{System.String})">
+      <summary>
+        使用单线程的方式执行一个方法,并使用 <paramref name="Output" /> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="func">需要执行的方法体.</param>
+      <param name="Output">要写入的输出流.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member name="M:CodeTimer.InitializeByConcurrent">
+      <summary>
+        多线程并发 Execute 方法的初始化.
+      </summary>
+    </member>
+    <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Action)">
+      <summary>
+        使用多线程并发的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="threadCount">线程的计数.</param>
+      <param name="action">需要执行的方法体.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Func{System.Boolean})">
+      <summary>
+        使用多线程并发的方式执行一个方法,并打印出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="threadCount">线程的计数.</param>
+      <param name="func">需要执行的方法体.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member
+      name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Action,System.Action{System.String})">
+      <summary>
+        使用多线程并发的方式执行一个方法,并使用 <paramref name="Output" /> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="threadCount">线程的计数.</param>
+      <param name="action">需要执行的方法体.</param>
+      <param name="Output">要写入的输出流.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member
+      name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Func{System.Boolean},System.Action{System.String})">
+      <summary>
+        使用多线程并发的方式执行一个方法,并使用 <paramref name="Output" /> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="threadCount">线程的计数.</param>
+      <param name="func">需要执行的方法体.</param>
+      <param name="Output">要写入的输出流.</param>
+    </member>
+    <member
+      name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Int32,System.Action,System.Action{System.String})">
+      <summary>
+        使用多线程并发的方式执行一个方法,并使用 <paramref name="Output" /> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="threadCount">线程的计数.</param>
+      <param name="mockThinkTime">模拟思考的时间.</param>
+      <param name="action">需要执行的方法体.</param>
+      <param name="Output">要写入的输出流.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member
+      name="M:CodeTimer.Execute(System.String,System.Int32,System.Int32,System.Int32,System.Func{System.Boolean},System.Action{System.String})">
+      <summary>
+        使用多线程并发的方式执行一个方法,并使用 <paramref name="Output" /> 方法输出 : 方法的运行时间, Cpu 时钟周期, 各代垃圾收集的回收次数的统计.
+      </summary>
+      <param name="name">名称.</param>
+      <param name="iteration">循环次数.</param>
+      <param name="threadCount">线程的计数.</param>
+      <param name="mockThinkTime">模拟思考的时间.</param>
+      <param name="func">需要执行的方法体.</param>
+      <param name="Output">要写入的输出流.</param>
+      <remarks>一个 <see cref="T:CodeTimerResult" /> 表示执行的结果.</remarks>
+    </member>
+    <member name="T:OSVersionType">
+      <summary>
+        操作系统类型.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.UnKnown">
+      <summary>
+        未知
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_3_1">
+      <summary>
+        Microsoft Windows 3.1
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_Me">
+      <summary>
+        Microsoft Windows Me.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_98_SecondEdition">
+      <summary>
+        Microsoft Windows 98 Second Edition.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_98">
+      <summary>
+        Microsoft Windows 98.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_95_OS_R2">
+      <summary>
+        Microsoft Windows 95 OS R2.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_95">
+      <summary>
+        Microsoft Windows 95.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_NT_3_5_1">
+      <summary>
+        Microsoft Windows NT 3.51.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_NT_4_0">
+      <summary>
+        Microsoft Windows NT 4.0.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_NT_4_0_Server">
+      <summary>
+        Microsoft Windows NT 4.0 Server.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_2000">
+      <summary>
+        Microsoft Windows 2000.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_XP">
+      <summary>
+        Microsoft Windows XP.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_Server_2003">
+      <summary>
+        Microsoft Windows Server 2003.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_Vista">
+      <summary>
+        Microsoft Windows Vista.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_7">
+      <summary>
+        Microsoft Windows 7.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_Server_2008">
+      <summary>
+        Microsoft Windows Server 2008.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_Server_2008_R2">
+      <summary>
+        Microsoft Windows Server 2008 R2.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Microsoft_Windows_CE">
+      <summary>
+        Microsoft Windows CE.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.Unix">
+      <summary>
+        Unix.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.MacOSX">
+      <summary>
+        MacOSX,基于 Unix 的增强版.
+      </summary>
+    </member>
+    <member name="F:OSVersionType.XBox_360">
+      <summary>
+        XBox 360
+      </summary>
+    </member>
+    <member name="T:EnvironmentHelper">
+      <summary>
+        提供有关当前环境和平台的信息以及操作它们的方法.
+      </summary>
+    </member>
+    <member name="F:EnvironmentHelper.CarriageReturnLineFeed">
+      <summary>
+        回车换行符
+      </summary>
+    </member>
+    <member name="F:EnvironmentHelper.Empty">
+      <summary>
+        空字符
+      </summary>
+    </member>
+    <member name="F:EnvironmentHelper.CarriageReturn">
+      <summary>
+        回车符
+      </summary>
+    </member>
+    <member name="F:EnvironmentHelper.LineFeed">
+      <summary>
+        换行符
+      </summary>
+    </member>
+    <member name="F:EnvironmentHelper.Tab">
+      <summary>
+        制表符
+      </summary>
+    </member>
+    <member name="P:EnvironmentHelper.OSEdition">
+      <summary>
+        当前系统的发行版本.类似 "Service Pack 2".
+      </summary>
+    </member>
+    <member name="P:EnvironmentHelper.OSName">
+      <summary>
+        获取当前计算机操作系统的版本名称.类似 "Microsoft Windows Server 2003".
+      </summary>
+    </member>
+    <member name="P:EnvironmentHelper.OSVersion">
+      <summary>
+        获取标识操作系统的 <see cref="P:EnvironmentHelper.OSVersion" /> 对象.
+      </summary>
+    </member>
+    <member name="P:EnvironmentHelper.OSVersionString">
+      <summary>
+        获取平台标识符、版本和当前安装在操作系统上的 Service Pack 的连接字符串表示形式.
+      </summary>
+    </member>
+    <member name="P:EnvironmentHelper.OSServicePack">
+      <summary>
+        获取当前操作系统补丁包的详细信息.类似 "Standard".
+      </summary>
+    </member>
+    <member name="P:EnvironmentHelper.IsGreaterThanOrEqualToVista">
+      <summary>
+        获取当前的系统是否是 Windows Vista (包含)以上.
+      </summary>
+    </member>
+    <member name="T:CodeTime.Properties.Resources">
+      <summary>
+        一个强类型的资源类，用于查找本地化的字符串等。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.ResourceManager">
+      <summary>
+        返回此类使用的缓存的 ResourceManager 实例。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.Culture">
+      <summary>
+        使用此强类型资源类，为所有资源查找
+        重写当前线程的 CurrentUICulture 属性。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.ChildThreadName">
+      <summary>
+        查找类似 {0} [ 线程 {1} ]{2} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.CPUCycles">
+      <summary>
+        查找类似     Cpu 时钟周期 :    {0} 纳秒 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.CPUGen">
+      <summary>
+        查找类似     GC 代数 {0}    :    {1} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.ExecuteFailureCount">
+      <summary>
+        查找类似     执行失败计数 :    {0} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.ExecuteSuccessCount">
+      <summary>
+        查找类似     执行成功计数 :    {0} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.IterationCount">
+      <summary>
+        查找类似     循环次数 : {0} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.MessageThan0">
+      <summary>
+        查找类似 必须大于 0. 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.MockThinkTime">
+      <summary>
+        查找类似  模拟思考时间 : {0} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.MultiThreadName">
+      <summary>
+        查找类似 {0} [多线程并发]{1} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.NameSuffix">
+      <summary>
+        查找类似  =&gt; 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.SingleThreadName">
+      <summary>
+        查找类似 {0} [单线程]{1} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.ThreadCount">
+      <summary>
+        查找类似  线程计数 : {0} 的本地化字符串。
+      </summary>
+    </member>
+    <member name="P:CodeTime.Properties.Resources.TimeElapsed">
+      <summary>
+        查找类似     运行时间     :    {0} 毫秒 的本地化字符串。
+      </summary>
+    </member>
+  </members>
 </doc>

@@ -28,7 +28,7 @@ namespace FadeJson
 
         private JsonValue ParseJsonArray() {
             Consume("[");
-            var array = new JsonValue(JsonType.Array) { Type = JsonType.Array };
+            var array = new JsonValue(JsonType.Array) {Type = JsonType.Array};
             var la = cache.Lookahead();
             while (la.Value != "]") {
                 var value = Parse();

@@ -1,22 +1,19 @@
-using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.IO;
-using System.Runtime;
 
 namespace FadeJson
 {
     public struct JsonValue
     {
-        public static readonly JsonValue Null = new JsonValue { Value = null, Type = JsonType.Null };
-        public static readonly JsonValue True = new JsonValue { Value = "true", Type = JsonType.Boolean };
-        public static readonly JsonValue False = new JsonValue { Value = "false", Type = JsonType.Boolean };
-        public static readonly JsonValue Colon = new JsonValue { Value = ":", Type = JsonType.Symbol };
-        public static readonly JsonValue LeftBrace = new JsonValue { Value = "{", Type = JsonType.Symbol };
-        public static readonly JsonValue RightBrace = new JsonValue { Value = "}", Type = JsonType.Symbol };
-        public static readonly JsonValue LeftBracket = new JsonValue { Value = "[", Type = JsonType.Symbol };
-        public static readonly JsonValue RightBracket = new JsonValue { Value = "]", Type = JsonType.Symbol };
-        public static readonly JsonValue Comma = new JsonValue { Value = ",", Type = JsonType.Symbol };
+        public static readonly JsonValue Null = new JsonValue {Value = null, Type = JsonType.Null};
+        public static readonly JsonValue True = new JsonValue {Value = "true", Type = JsonType.Boolean};
+        public static readonly JsonValue False = new JsonValue {Value = "false", Type = JsonType.Boolean};
+        public static readonly JsonValue Colon = new JsonValue {Value = ":", Type = JsonType.Symbol};
+        public static readonly JsonValue LeftBrace = new JsonValue {Value = "{", Type = JsonType.Symbol};
+        public static readonly JsonValue RightBrace = new JsonValue {Value = "}", Type = JsonType.Symbol};
+        public static readonly JsonValue LeftBracket = new JsonValue {Value = "[", Type = JsonType.Symbol};
+        public static readonly JsonValue RightBracket = new JsonValue {Value = "]", Type = JsonType.Symbol};
+        public static readonly JsonValue Comma = new JsonValue {Value = ",", Type = JsonType.Symbol};
 
         private readonly Dictionary<object, JsonValue> dictionary;
         private readonly List<JsonValue> list;
