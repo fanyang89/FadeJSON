@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FadeJson
 {
-    public class CommonCache : ICommonCache<Char, TextReader>
+    public class CharCache : ICommonCache<Char, TextReader>
     {
         private readonly TextReader textReader;
 
@@ -14,7 +14,7 @@ namespace FadeJson
 
         private readonly int bufferMax;
 
-        public CommonCache(TextReader textReader, int bufferSize = 8) {
+        public CharCache(TextReader textReader, int bufferSize = 8) {
             this.textReader = textReader;
             bufferMax = bufferSize;
             buffer = new char[2 * bufferSize];

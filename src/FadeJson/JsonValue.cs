@@ -25,7 +25,6 @@ namespace FadeJson
             dictionary = null;
             list = null;
             Value = string.Empty;
-            Type = type;
             switch (type) {
                 case JsonType.Array:
                     list = new List<JsonValue>();
@@ -36,6 +35,7 @@ namespace FadeJson
                     Type = JsonType.Object;
                     break;
             }
+            Type = type;
         }
 
         public JsonType Type { get; set; }
@@ -73,7 +73,7 @@ namespace FadeJson
 
         public static JsonValue FromString(string src) {
             var stringReader = new StringReader(src);
-            var charCache = new CommonCache(stringReader);
+            var charCache = new CharCache(stringReader);
             var tokenizer = new Tokenizer(charCache);
             var tokenCache = new TokenCache(tokenizer);
             var parser = new Parser(tokenCache);
@@ -83,7 +83,7 @@ namespace FadeJson
         public static JsonValue FromFile(string path) {
             var fileStream = new FileStream(path, FileMode.Open);
             var streamReader = new StreamReader(fileStream);
-            var charCache = new CommonCache(streamReader);
+            var charCache = new CharCache(streamReader);
             var tokenizer = new Tokenizer(charCache);
             var tokenCache = new TokenCache(tokenizer);
             var parser = new Parser(tokenCache);

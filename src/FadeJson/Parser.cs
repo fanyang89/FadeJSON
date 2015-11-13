@@ -15,10 +15,7 @@ namespace FadeJson
             if (la.CheckValue(JsonType.Symbol, "{")) {
                 return ParseJsonObject();
             }
-            if (la.CheckValue(JsonType.Symbol, "[")) {
-                return ParseJsonArray();
-            }
-            return cache.Next();
+            return la.CheckValue(JsonType.Symbol, "[") ? ParseJsonArray() : cache.Next();
         }
 
         private void Consume(string value, JsonType type = JsonType.Symbol) {

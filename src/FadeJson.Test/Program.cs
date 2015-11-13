@@ -12,7 +12,7 @@ namespace FadeJson.Test
                 "TestSuite/TestSuite.json",
                 "TestSuite/data.json"
             };
-
+            
             foreach (var path in testSuitePathList) {
                 CodeTimer.Execute($"Json.NET Test {path}", 10, () => {
                     var fileStream = new FileStream(path, FileMode.Open);

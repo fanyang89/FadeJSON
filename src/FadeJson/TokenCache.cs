@@ -8,7 +8,7 @@ namespace FadeJson
     {
         private readonly Tokenizer tokenizer;
 
-        public TokenCache(Tokenizer tokenizer, int size = 2) {
+        public TokenCache(Tokenizer tokenizer, int size = 4) {
             this.tokenizer = tokenizer;
             bufferMax = size;
             buffer = new JsonValue[2 * size];

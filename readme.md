@@ -33,7 +33,7 @@ FadeJson.ExportClass example.json MyNamespace
 生成的实体类在`FadeJson.ExportClass.exe`所在的目录中，添加到工程即可使用。
 
 ## 性能
-FadeJson在读取较小的Json文件时比Json.NET快速。
+FadeJson是一个高性能的Json Parser（至少比Json.NET要更快）。
 
 ### 测试
 .NET Framework 4.6, Release配置编译。读取相同的Json文件。
@@ -43,14 +43,14 @@ FadeJson在读取较小的Json文件时比Json.NET快速。
 
 |FadeJson3|Json.NET|
 |---------|--------|
-|1714ms|1312ms|
-|1722ms|1315ms|
-|1750ms|1314ms|
+|1106ms|1318ms|
+|1123ms|1373ms|
+|1185ms|1331ms|
 
 #### 小文件（2KiB）
 
 |FadeJson3|Json.NET|
 |---------|--------|
-|13ms|45ms|
-|13ms|46ms|
-|13ms|46ms|
+|12ms|44ms|
+|13ms|44ms|
+|12ms|44ms|

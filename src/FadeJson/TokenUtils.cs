@@ -8,7 +8,9 @@ namespace FadeJson
             switch (token.Type) {
                 case JsonType.Int32:
                     int i;
-                    int.TryParse(token.Value, out i);
+                    if (!int.TryParse(token.Value, out i)) {
+                        throw new FormatException();
+                    }
                     return i;
                 case JsonType.String:
                     return token.Value;
@@ -22,6 +24,10 @@ namespace FadeJson
                     return token.Value == "true";
                 case JsonType.Symbol:
                     return token.Value;
+                case JsonType.Array:
+                    throw new ArgumentOutOfRangeException();
+                case JsonType.Object:
+                    throw new ArgumentOutOfRangeException();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

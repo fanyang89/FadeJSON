@@ -39,11 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonCache.cs" />
-    <Compile Include="ICommonCache.cs" />
-    <Compile Include="JsonCompiler\JsonCompiler.cs" />
-    <Compile Include="JsonCompiler\JsonCompilerOptions.cs" />
-    <Compile Include="NumberUtils.cs" />
+    <Compile Include="CharCache.cs" />
+    <Compile Include="ICache.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JsonValue.cs" />
