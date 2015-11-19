@@ -1,23 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FadeJson
 {
     public struct JsonValue
     {
-        public static readonly JsonValue Null = new JsonValue {Value = null, Type = JsonType.Null};
-        public static readonly JsonValue True = new JsonValue {Value = "true", Type = JsonType.Boolean};
-        public static readonly JsonValue False = new JsonValue {Value = "false", Type = JsonType.Boolean};
-        public static readonly JsonValue Colon = new JsonValue {Value = ":", Type = JsonType.Symbol};
-        public static readonly JsonValue LeftBrace = new JsonValue {Value = "{", Type = JsonType.Symbol};
-        public static readonly JsonValue RightBrace = new JsonValue {Value = "}", Type = JsonType.Symbol};
-        public static readonly JsonValue LeftBracket = new JsonValue {Value = "[", Type = JsonType.Symbol};
-        public static readonly JsonValue RightBracket = new JsonValue {Value = "]", Type = JsonType.Symbol};
-        public static readonly JsonValue Comma = new JsonValue {Value = ",", Type = JsonType.Symbol};
+        public static readonly JsonValue Null = new JsonValue { Value = null, Type = JsonType.Null };
+        public static readonly JsonValue True = new JsonValue { Value = "true", Type = JsonType.Boolean };
+        public static readonly JsonValue False = new JsonValue { Value = "false", Type = JsonType.Boolean };
+        public static readonly JsonValue Colon = new JsonValue { Value = ":", Type = JsonType.Symbol };
+        public static readonly JsonValue LeftBrace = new JsonValue { Value = "{", Type = JsonType.Symbol };
+        public static readonly JsonValue RightBrace = new JsonValue { Value = "}", Type = JsonType.Symbol };
+        public static readonly JsonValue LeftBracket = new JsonValue { Value = "[", Type = JsonType.Symbol };
+        public static readonly JsonValue RightBracket = new JsonValue { Value = "]", Type = JsonType.Symbol };
+        public static readonly JsonValue Comma = new JsonValue { Value = ",", Type = JsonType.Symbol };
 
-        private readonly Dictionary<object, JsonValue> dictionary;
+        private readonly Dictionary<string, JsonValue> dictionary;
         private readonly List<JsonValue> list;
-
+        
         public JsonValue(JsonType type) {
             dictionary = null;
             list = null;
@@ -28,7 +30,7 @@ namespace FadeJson
                     Type = JsonType.Array;
                     break;
                 case JsonType.Object:
-                    dictionary = new Dictionary<object, JsonValue>();
+                    dictionary = new Dictionary<string, JsonValue>();
                     Type = JsonType.Object;
                     break;
             }
@@ -38,24 +40,41 @@ namespace FadeJson
         public JsonType Type { get; set; }
         public string Value { get; set; }
 
-        public int Count => dictionary.Count;
-        public IEnumerable<JsonValue> Values => dictionary.Values;
-        public IEnumerable<object> Keys => dictionary.Keys;
+        public int Count {
+            get {
+                var count = 0;
+                if (dictionary != null) {
+                    count += dictionary.Count;
+                }
+                if (list != null) {
+                    count += list.Count;
+                }
+                return count;
+            }
+        }
 
-        public JsonValue this[object key] {
+        public IEnumerable<JsonValue> Values => dictionary.Values.Concat(list);
+
+        public IEnumerable<string> Keys {
+            get {
+                return dictionary.Keys.Concat(Enumerable.Range(0, list.Count).Select(i => i.ToString()));
+            }
+        }
+
+        public JsonValue this[string key] {
             get { return dictionary[key]; }
             set { dictionary[key] = value; }
         }
 
         public JsonValue this[int key] {
             get { return list[key]; }
-            set { dictionary[key] = value; }
+            set { list[key] = value; }
         }
 
         public void Add(string key, JsonValue value) {
             dictionary.Add(key, value);
         }
-
+        
         public void Add(JsonValue value) {
             list.Add(value);
         }
@@ -86,6 +105,16 @@ namespace FadeJson
             var parser = new Parser(tokenCache);
             var result = parser.Parse();
             fileStream.Dispose();
+            return result;
+        }
+
+        public static JsonValue FromStream(Stream stream) {
+            var streamReader = new StreamReader(stream);
+            var charCache = new CharCache(streamReader);
+            var tokenizer = new Tokenizer(charCache);
+            var tokenCache = new TokenCache(tokenizer);
+            var parser = new Parser(tokenCache);
+            var result = parser.Parse();
             return result;
         }
     }
