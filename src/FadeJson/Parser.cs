@@ -36,11 +36,11 @@ namespace FadeJson
 
                 la = cache.Lookahead();
                 if (la.Value == "]" && la.Type == JsonType.Symbol) {
+                    Consume("]");
                     break;
                 }
                 Consume(",");
             }
-            Consume("]");
             return array;
         }
 
@@ -59,12 +59,11 @@ namespace FadeJson
                 j.Add(key.Value, value);
                 la = cache.Lookahead();
                 if (la.Value == "}" && la.Type == JsonType.Symbol) {
+                    Consume("}");
                     break;
                 }
                 Consume(",");
             }
-
-            Consume("}");
             return j;
         }
     }

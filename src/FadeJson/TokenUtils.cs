@@ -7,17 +7,23 @@ namespace FadeJson
         public static dynamic ValueOf(this JsonValue token) {
             switch (token.Type) {
                 case JsonType.Int32:
-                    int i;
-                    if (!int.TryParse(token.Value, out i)) {
-                        throw new FormatException();
+                    {
+                        int i;
+                        if (!int.TryParse(token.Value, out i)) {
+                            throw new FormatException();
+                        }
+                        return i;
                     }
-                    return i;
                 case JsonType.String:
                     return token.Value;
                 case JsonType.Double:
-                    double d;
-                    double.TryParse(token.Value, out d);
-                    return d;
+                    {
+                        double d;
+                        if (!double.TryParse(token.Value, out d)) {
+                            throw new FormatException();
+                        }
+                        return d;
+                    }
                 case JsonType.Null:
                     return null;
                 case JsonType.Boolean:
@@ -25,9 +31,9 @@ namespace FadeJson
                 case JsonType.Symbol:
                     return token.Value;
                 case JsonType.Array:
-                    throw new ArgumentOutOfRangeException();
+                    return token;
                 case JsonType.Object:
-                    throw new ArgumentOutOfRangeException();
+                    return token;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

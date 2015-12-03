@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FadeJson
 {
@@ -19,7 +20,7 @@ namespace FadeJson
 
         private readonly Dictionary<string, JsonValue> dictionary;
         private readonly List<JsonValue> list;
-        
+
         public JsonValue(JsonType type) {
             dictionary = null;
             list = null;
@@ -74,7 +75,7 @@ namespace FadeJson
         public void Add(string key, JsonValue value) {
             dictionary.Add(key, value);
         }
-        
+
         public void Add(JsonValue value) {
             list.Add(value);
         }
@@ -84,6 +85,36 @@ namespace FadeJson
         }
 
         public override string ToString() {
+            switch (Type) {
+                case JsonType.Array:
+                    {
+                        var sb = new StringBuilder();
+                        sb.Append("[ ");
+                        foreach (var value in list) {
+                            sb.Append(value);
+                            sb.Append(",");
+                        }
+                        sb.Remove(sb.Length - 1, 1);
+                        sb.Append(" ]");
+                        return sb.ToString();
+                    }
+                case JsonType.Object:
+                    {
+                        var sb = new StringBuilder();
+                        sb.Append("{ ");
+                        foreach (var value in dictionary) {
+                            sb.Append("\"").Append(value.Key).Append("\"");
+                            sb.Append(":");
+                            sb.Append(value.Value);
+                            sb.Append(",");
+                        }
+                        sb.Remove(sb.Length - 1, 1);
+                        sb.Append("}");
+                        return sb.ToString();
+                    }
+                case JsonType.String:
+                    return $"\"{Value}\"";
+            }
             return Value;
         }
 
