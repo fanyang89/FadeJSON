@@ -49,7 +49,7 @@ namespace FadeJson.ClassExporter
                 className = args[2];
             }
 
-            GenerateTypeDecl(JsonValueUtils.FromFile(fileName), namespaceName, className);
+            GenerateTypeDecl(JsonValue.FromFile(fileName), namespaceName, className);
             Console.WriteLine("Done.");
         }
 

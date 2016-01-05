@@ -111,7 +111,11 @@ namespace FadeJson
             var j = new JsonValue(JsonType.String) {
                 Value = defaultStringBuilder.ToString()
             };
+#if NET35
+            defaultStringBuilder.Length = 0;
+#else
             defaultStringBuilder.Clear();
+#endif
             return j;
         }
 
@@ -129,7 +133,7 @@ namespace FadeJson
             for (var i = 0; i < 4; i++) {
                 defaultUnicodeCache[i] = cache.Next();
             }
-            return (char)(int.Parse(string.Concat(defaultUnicodeCache), NumberStyles.HexNumber));
+            return (char)int.Parse(string.Concat(defaultUnicodeCache), NumberStyles.HexNumber);
         }
 
         private JsonValue ParseKeywordToken() {

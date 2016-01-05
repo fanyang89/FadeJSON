@@ -4,7 +4,13 @@ namespace FadeJson
 {
     public static class TokenUtils
     {
-        public static dynamic ValueOf(this JsonValue token) {
+        public static
+#if NET35
+            object
+#else
+            dynamic
+#endif
+            ValueOf(this JsonValue token) {
             switch (token.Type) {
                 case JsonType.Int32:
                     {
