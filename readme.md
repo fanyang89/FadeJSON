@@ -33,6 +33,7 @@ The code is simple and easy to read. Support .NET Framework 3.5 and a
 ``` 
 var jsonObject = FadeJson.JsonValue.FromString(content);
 var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"]; //value == "4.0.0"
+var realValue = value.ValueOf(); //cast value to its real type
 ```
 
 ### FadeJson.ExportClass
