@@ -1,0 +1,13 @@
+{
+    "name" : "caser",
+    "age" : 100,
+    "is_human" : false,
+    "hobby" : [
+        {
+            "eat" : true
+        },
+        {
+            "sleep" : false
+        }
+    ]
+}

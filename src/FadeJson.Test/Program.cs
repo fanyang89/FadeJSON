@@ -10,7 +10,8 @@ namespace FadeJson.Test
         private static void Main(string[] args) {
             var testSuitePathList = new[] {
                 "TestSuite/TestSuite.json",
-                "TestSuite/data.json"
+                "TestSuite/data.json",
+                "TestSuite/TestSuite2.json"
             };
             
             foreach (var path in testSuitePathList) {

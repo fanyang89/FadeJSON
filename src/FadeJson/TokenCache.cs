@@ -11,13 +11,15 @@ namespace FadeJson
         private readonly int bufferMax;
         private readonly Tokenizer tokenizer;
         private int pos;
+        private readonly int doubleBufferMax;
 
         public TokenCache(Tokenizer tokenizer, int size = 4) {
             this.tokenizer = tokenizer;
             bufferMax = size;
-            buffer = new JsonValue[2*size];
+            buffer = new JsonValue[2 * size];
             FlushBuffer(0, bufferMax);
-            FlushBuffer(bufferMax, 2*bufferMax);
+            doubleBufferMax = 2 * bufferMax;
+            FlushBuffer(bufferMax, doubleBufferMax);
         }
 
         public bool Check(IEnumerable<JsonValue> list) {
@@ -29,11 +31,11 @@ namespace FadeJson
             if (index < 0 || index > bufferMax) {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            if (pos >= 2*bufferMax) {
+            if (pos >= doubleBufferMax) {
                 pos = 0;
-                FlushBuffer(bufferMax, 2*bufferMax);
+                FlushBuffer(bufferMax, doubleBufferMax);
             }
-            return buffer[pos + index];
+            return buffer[(pos + index) % (doubleBufferMax)];
         }
 
         public JsonValue Next() {
@@ -41,9 +43,9 @@ namespace FadeJson
                 FlushBuffer(0, bufferMax);
                 return buffer[pos++];
             }
-            if (pos >= 2*bufferMax) {
+            if (pos >= doubleBufferMax) {
                 pos = 0;
-                FlushBuffer(bufferMax, 2*bufferMax);
+                FlushBuffer(bufferMax, doubleBufferMax);
                 return buffer[pos++];
             }
             return buffer[pos++];

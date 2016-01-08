@@ -41,8 +41,10 @@ namespace FadeJson
         public JsonType Type { get; set; }
         public string Value { get; set; }
 
-        public int Count {
-            get {
+        public int Count
+        {
+            get
+            {
                 var count = 0;
                 if (dictionary != null) {
                     count += dictionary.Count;
@@ -54,20 +56,47 @@ namespace FadeJson
             }
         }
 
-        public IEnumerable<JsonValue> Values => dictionary.Values.Concat(list);
+        public IEnumerable<JsonValue> Values {
+            get
+            {
+                if (dictionary == null && list == null) {
+                    return null;
+                }
+                if (dictionary == null && list != null) {
+                    return list;
+                }
+                if (dictionary != null && list == null) {
+                    return dictionary.Values;
+                }
+                return dictionary.Values.Concat(list);
+            }
+        }
 
-        public IEnumerable<string> Keys {
-            get {
+        public IEnumerable<string> Keys
+        {
+            get
+            {
+                if (dictionary == null && list == null) {
+                    return null;
+                }
+                if (dictionary == null && list != null) {
+                    return Enumerable.Range(0, list.Count).Select(i => i.ToString());
+                }
+                if (dictionary != null && list == null) {
+                    return dictionary.Keys;
+                }
                 return dictionary.Keys.Concat(Enumerable.Range(0, list.Count).Select(i => i.ToString()));
             }
         }
 
-        public JsonValue this[string key] {
+        public JsonValue this[string key]
+        {
             get { return dictionary[key]; }
             set { dictionary[key] = value; }
         }
 
-        public JsonValue this[int key] {
+        public JsonValue this[int key]
+        {
             get { return list[key]; }
             set { list[key] = value; }
         }
@@ -86,8 +115,7 @@ namespace FadeJson
 
         public override string ToString() {
             switch (Type) {
-                case JsonType.Array:
-                    {
+                case JsonType.Array: {
                         var sb = new StringBuilder();
                         sb.Append("[ ");
                         foreach (var value in list) {
@@ -98,8 +126,7 @@ namespace FadeJson
                         sb.Append(" ]");
                         return sb.ToString();
                     }
-                case JsonType.Object:
-                    {
+                case JsonType.Object: {
                         var sb = new StringBuilder();
                         sb.Append("{ ");
                         foreach (var value in dictionary) {

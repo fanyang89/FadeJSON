@@ -9,6 +9,8 @@ namespace FadeJson
 {
     public class Tokenizer
     {
+        private int LinePosition = 1;
+
         private const char EOF = unchecked((char)-1);
         private readonly char[] afterEsc = { '\n', '\b', '\f', '\r', '\t', '\'', '/', '\\' };
         private readonly ICommonCache<char, TextReader> cache;
@@ -21,7 +23,7 @@ namespace FadeJson
 
         private readonly string[] keywordList = { "true", "false", "null" };
         private readonly JsonValue[] keywordValueList = { JsonValue.True, JsonValue.False, JsonValue.Null };
-        
+
         public Tokenizer(ICommonCache<char, TextReader> cache) {
             this.cache = cache;
         }
@@ -47,8 +49,11 @@ namespace FadeJson
                 switch (c) {
                     case ' ':
                     case '\t':
-                    case '\n':
                     case '\r':
+                        cache.Next();
+                        continue;
+                    case '\n':
+                        LinePosition++;
                         cache.Next();
                         continue;
                     case ':':
@@ -167,7 +172,7 @@ namespace FadeJson
             }
 
             return new JsonValue {
-                Value = new string(defaultNumberCache),
+                Value = new string(defaultNumberCache, 0, pos),
                 Type = isDouble ? JsonType.Double : JsonType.Int32
             };
         }
