@@ -30,6 +30,10 @@ namespace FadeJson
             Consume("[");
             var array = new JsonValue(JsonType.Array) {Type = JsonType.Array};
             var la = cache.Lookahead();
+            if (la.CheckValue(JsonType.Symbol, "]")) {
+                Consume("]");
+                return array;
+            }
             while (la.Value != "]") {
                 var value = Parse();
                 array.Add(value);
@@ -46,12 +50,18 @@ namespace FadeJson
 
         private JsonValue ParseJsonObject() {
             Consume("{");
-            if (cache.Lookahead().Type != JsonType.String) {
+            var j = new JsonValue(JsonType.Object);
+            var la = cache.Lookahead();
+
+            if (la.CheckValue(JsonType.Symbol, "}")) {
+                Consume("}");
+                return j;
+            }
+
+            if (la.Type != JsonType.String) {
                 throw new FormatException();
             }
 
-            var j = new JsonValue(JsonType.Object);
-            var la = cache.Lookahead();
             while (la.Value != "}") {
                 var key = cache.Next();
                 Consume(":");
