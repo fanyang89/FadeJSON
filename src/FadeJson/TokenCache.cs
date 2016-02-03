@@ -60,7 +60,7 @@ namespace FadeJson
         private void FlushBuffer(int from, int to) {
             for (var i = from; i < to; i++) {
                 buffer[i] = tokenizer.GetNextToken();
-                if (buffer[i].Type == JsonType.Null) {
+                if (buffer[i] == JsonValue.Eof) {
                     break;
                 }
             }

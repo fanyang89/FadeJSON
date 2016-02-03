@@ -94,7 +94,7 @@ namespace FadeJson
                     case '9':
                         return ParseNumberToken();
                     default:
-                        return JsonValue.Null;
+                        return JsonValue.Eof;
                 }
             }
         }

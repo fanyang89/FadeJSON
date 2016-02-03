@@ -10,22 +10,22 @@ namespace FadeJson
 #else
             dynamic
 #endif
-            ValueOf(this JsonValue token) {
-            switch (token.Type) {
+            ValueOf(this JsonValue jsonValue) {
+            switch (jsonValue.Type) {
                 case JsonType.Int32:
                     {
                         int i;
-                        if (!int.TryParse(token.Value, out i)) {
+                        if (!int.TryParse(jsonValue.Value, out i)) {
                             throw new FormatException();
                         }
                         return i;
                     }
                 case JsonType.String:
-                    return token.Value;
+                    return jsonValue.Value;
                 case JsonType.Double:
                     {
                         double d;
-                        if (!double.TryParse(token.Value, out d)) {
+                        if (!double.TryParse(jsonValue.Value, out d)) {
                             throw new FormatException();
                         }
                         return d;
@@ -33,13 +33,13 @@ namespace FadeJson
                 case JsonType.Null:
                     return null;
                 case JsonType.Boolean:
-                    return token.Value == "true";
+                    return jsonValue.Value == "true";
                 case JsonType.Symbol:
-                    return token.Value;
+                    return jsonValue.Value;
                 case JsonType.Array:
-                    return token;
+                    return jsonValue;
                 case JsonType.Object:
-                    return token;
+                    return jsonValue;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
