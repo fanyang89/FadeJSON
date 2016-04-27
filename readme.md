@@ -10,29 +10,25 @@ The code is simple and easy to read. Support .NET Framework 3.5 and a
 
 [下载二进制版本（Download Binary）](https://github.com/YangFan789/FadeJson/releases)
 
-<script src='http://git.oschina.net/fuis/FadeJson/star_widget_preview'></script>
+## 用法 Getting Started
 
-<script src='http://git.oschina.net/fuis/FadeJson/fork_widget_preview'></script>
-
-## 用法（Usage）
-
-### FadeJson Library
+### FadeJson Main Library
 
 1. 在项目中添加对`FadeJson.dll`的引用。
-   
-   （Add the reference of `FadeJson.dll` to your project.） 
-   
+
 2. 添加`using FadeJson;`
-   
-   （Import namespace `using FadeJson;`）
-   
+
 3. 读取JSON文件的值
-   
-   （Reading values from JSON file as shown in the following code.）
+
+1. Add the reference of `FadeJson.dll` to your project.
+
+2. Import namespace `using FadeJson;`
+
+3. Reading values from JSON file as shown in the following code.
 
 ``` 
 var jsonObject = FadeJson.JsonValue.FromString(content);
-var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"]; //value == "4.0.0"
+var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
 var realValue = value.ValueOf(); //cast value to its real type
 ```
 
@@ -40,11 +36,9 @@ var realValue = value.ValueOf(); //cast value to its real type
 
 这是一个从Json文件中导出实体类的工具
 
-（It a tool which helps you import a real class from your JSON file.）
+It a tool which helps you to generate class files(`*.cs`) for your JSON data.
 
-命令行：
-
-（CommandLines:）
+#### 用法 Usage
 
 ``` 
 FadeJson.ExportClass example.json MyNamespace
@@ -52,17 +46,13 @@ FadeJson.ExportClass example.json MyNamespace
 
 生成的实体类在`FadeJson.ExportClass.exe`所在的目录中，添加到工程即可使用。
 
-（The generated entity classes in the same directory as the `FadeJson.ExportClass.exe`, can be added to a project. ）
+The generated entity classes in the same directory as the `FadeJson.ExportClass.exe`, can be added to a project. 
 
-## 性能（performance）
+## 解析性能 Parsing Performance
 
-FadeJson是一个高性能的Json Parser（至少比Json.NET要更快）。
+### 测试 Tests
 
-（FadeJson is a high performance Json Parser (or at least faster than theJson.NET).）
-
-### 测试（Test）
-
-.NET Framework 4.6, Release配置编译。读取相同的JSON文件。
+.NET Framework 4.6.1, Release配置编译。读取相同的JSON文件。
 
 每轮测试迭代10次，取平均值。单位毫秒。耗时越短越好。
 
@@ -70,20 +60,18 @@ FadeJson是一个高性能的Json Parser（至少比Json.NET要更快）。
 
 Each test iteration 10 times and averaged, Units of milliseconds. Take the shorter the better.
 
-
-
-#### 大文件（Big JSON file）（3660KiB）
+#### 大文件 Big JSON file（3660KiB）
 
 | FadeJson | Json.NET |
 | -------- | -------- |
-| 1106ms   | 1318ms   |
-| 1123ms   | 1373ms   |
-| 1185ms   | 1331ms   |
+| 1257ms   | 1227ms   |
+| 1205ms   | 1220ms   |
+| 1209ms   | 1219ms   |
 
-#### 小文件（Small JSON file）（2KiB）
+#### 小文件 Small JSON file（2KiB）
 
 | FadeJson | Json.NET |
 | -------- | -------- |
-| 12ms     | 44ms     |
-| 13ms     | 44ms     |
-| 12ms     | 44ms     |
+| 8ms      | 41ms     |
+| 7ms      | 39ms     |
+| 8ms      | 43ms     |

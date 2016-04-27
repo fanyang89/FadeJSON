@@ -11,7 +11,7 @@ namespace FadeJson.ClassExporter
         //输入：json格式的文件内容
         //输出：该文件对应的类(*.cs)
 
-        private static int classCount;
+        private static int _classCount;
 
         private static string GetNameFromEnum(JsonType valType) {
             var typeNames = new[] {"JsonValue", "JsonValue", "int", "string", "bool"};
@@ -66,7 +66,7 @@ namespace FadeJson.ClassExporter
             foreach (var key in j.Keys) {
                 var o = j[key];
                 if (o.Type == JsonType.Object) {
-                    var newClassName = $"{className}{classCount++}";
+                    var newClassName = $"{className}{_classCount++}";
                     GenerateTypeDecl(o, namespaceName, newClassName);
                     var newProperty = new CodeSnippetTypeMember(
                         $"        public {newClassName} {key} {{ get; set; }}");

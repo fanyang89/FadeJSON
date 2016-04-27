@@ -13,12 +13,12 @@ namespace FadeJson.Test
                 "TestSuite/data.json",
                 "TestSuite/TestSuite2.json"
             };
-            
-            foreach (var path in testSuitePathList) {
-                CodeTimer.Execute($"IO Test {path}", 10, () => {
-                    var content = File.ReadAllText(path);
-                });
-            }
+
+            //foreach (var path in testSuitePathList) {
+            //    CodeTimer.Execute($"IO Test {path}", 10, () => {
+            //        var content = File.ReadAllText(path);
+            //    });
+            //}
 
             foreach (var path in testSuitePathList) {
                 CodeTimer.Execute($"Json.NET Test {path}", 10, () => {
@@ -33,7 +33,7 @@ namespace FadeJson.Test
                     var jsonValue = JsonValue.FromFile(path);
                 });
             }
-            
+
             Console.ReadKey();
         }
     }

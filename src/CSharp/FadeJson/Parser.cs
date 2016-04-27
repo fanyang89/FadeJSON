@@ -4,32 +4,32 @@ namespace FadeJson
 {
     public class Parser
     {
-        private readonly ICommonCache<JsonValue, Tokenizer> cache;
+        private readonly Cache<Tokenizer, JsonValue> _cache;
 
-        public Parser(ICommonCache<JsonValue, Tokenizer> cache) {
-            this.cache = cache;
+        public Parser(Cache<Tokenizer, JsonValue> cache) {
+            this._cache = cache;
         }
 
         public JsonValue Parse() {
-            var la = cache.Lookahead();
+            var la = _cache.Peek();
             if (la.CheckValue(JsonType.Symbol, "{")) {
                 return ParseJsonObject();
             }
-            return la.CheckValue(JsonType.Symbol, "[") ? ParseJsonArray() : cache.Next();
+            return la.CheckValue(JsonType.Symbol, "[") ? ParseJsonArray() : _cache.Consume();
         }
 
         private void Consume(string value, JsonType type = JsonType.Symbol) {
-            var la = cache.Lookahead();
+            var la = _cache.Peek();
             if (la.Type != type || la.Value != value) {
                 throw new FormatException();
             }
-            cache.Next();
+            _cache.Consume();
         }
 
         private JsonValue ParseJsonArray() {
             Consume("[");
-            var array = new JsonValue(JsonType.Array) {Type = JsonType.Array};
-            var la = cache.Lookahead();
+            var array = new JsonValue(JsonType.Array);
+            var la = _cache.Peek();
             if (la.CheckValue(JsonType.Symbol, "]")) {
                 Consume("]");
                 return array;
@@ -38,7 +38,7 @@ namespace FadeJson
                 var value = Parse();
                 array.Add(value);
 
-                la = cache.Lookahead();
+                la = _cache.Peek();
                 if (la.Value == "]" && la.Type == JsonType.Symbol) {
                     Consume("]");
                     break;
@@ -51,7 +51,7 @@ namespace FadeJson
         private JsonValue ParseJsonObject() {
             Consume("{");
             var j = new JsonValue(JsonType.Object);
-            var la = cache.Lookahead();
+            var la = _cache.Peek();
 
             if (la.CheckValue(JsonType.Symbol, "}")) {
                 Consume("}");
@@ -63,11 +63,11 @@ namespace FadeJson
             }
 
             while (la.Value != "}") {
-                var key = cache.Next();
+                var key = _cache.Consume();
                 Consume(":");
                 var value = Parse();
                 j.Add(key.Value, value);
-                la = cache.Lookahead();
+                la = _cache.Peek();
                 if (la.Value == "}" && la.Type == JsonType.Symbol) {
                     Consume("}");
                     break;
