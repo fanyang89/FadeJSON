@@ -20,6 +20,7 @@ The code is simple and easy to read. Support .NET Framework 3.5 and a
 
 3. 读取JSON文件的值
 
+
 1. Add the reference of `FadeJson.dll` to your project.
 
 2. Import namespace `using FadeJson;`
