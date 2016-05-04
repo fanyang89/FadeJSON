@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Jil;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,7 +12,8 @@ namespace FadeJson.Test
             var testSuitePathList = new[] {
                 "TestSuite/TestSuite.json",
                 "TestSuite/data.json",
-                "TestSuite/TestSuite2.json"
+                "TestSuite/TestSuite2.json",
+                "TestSuite/auctions.json"
             };
 
             //foreach (var path in testSuitePathList) {
@@ -22,9 +24,19 @@ namespace FadeJson.Test
 
             foreach (var path in testSuitePathList) {
                 CodeTimer.Execute($"Json.NET Test {path}", 10, () => {
-                    var fileStream = new FileStream(path, FileMode.Open);
-                    var jObject = JObject.Load(new JsonTextReader(new StreamReader(fileStream)));
-                    fileStream.Dispose();
+                    using (var fileStream = new FileStream(path, FileMode.Open)) {
+                        var jObject = JObject.Load(new JsonTextReader(new StreamReader(fileStream)));
+                    }
+                });
+            }
+
+            foreach (var path in testSuitePathList) {
+                CodeTimer.Execute($"Jil Test {path}", 10, () => {
+                    using (var stream = new FileStream(path, FileMode.Open)) {
+                        using (var sr = new StreamReader(stream)) {
+                            var j = JSON.DeserializeDynamic(sr);
+                        }
+                    }
                 });
             }
 
