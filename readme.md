@@ -1,78 +1,55 @@
-# FadeJson
+# FadeJSON
 
-代码简洁易读的Json Parser。 支持.NET Framework 3.5及以上版本。
-
-The code is simple and easy to read. Support .NET Framework 3.5 and above.
-
-[FadeJson in GitHub](https://github.com/YangFan789/FadeJson)
-
-[FadeJson in GitOSC](http://git.oschina.net/fuis/FadeJson)
-
-[下载二进制版本（Download Binary）](https://github.com/YangFan789/FadeJson/releases)
-
-## 用法 Getting Started
-
-### FadeJson Main Library
-
-1. 在项目中添加对`FadeJson.dll`的引用。
-
-2. 添加`using FadeJson;`
-
-3. 读取JSON文件的值
+Micro and fast JSON library for .NET Platform.
 
 
-1. Add the reference of `FadeJson.dll` to your project.
 
-2. Import namespace `using FadeJson;`
+## Features
 
-3. Reading values from JSON file as shown in the following code.
+- Micro. Binary library only 13KiB.
+- Easy to use.
+- Fast.
 
-``` 
-var jsonObject = FadeJson.JsonValue.FromString(content);
-var value = jsonObject["frameworks"]["dotnet"]["dependencies"]["System.Linq"];
-var realValue = value.ValueOf(); //cast value to its real type
-```
 
-### FadeJson.ExportClass
 
-这是一个从Json文件中导出实体类的工具
+## Releases
 
-It a tool which helps you to generate class files(`*.cs`) for your JSON data.
+//TODO
 
-#### 用法 Usage
 
-``` 
-FadeJson.ExportClass example.json MyNamespace
-```
 
-生成的实体类在`FadeJson.ExportClass.exe`所在的目录中，添加到工程即可使用。
+## Getting Started
 
-The generated entity classes in the same directory as the `FadeJson.ExportClass.exe`, can be added to a project. 
+//TODO
 
-## 解析性能 Parsing Performance
 
-### 测试 Tests
 
-.NET Framework 4.6.1, Release配置编译。读取相同的JSON文件。
+## Benchmarks
 
-每轮测试迭代10次，取平均值。单位毫秒。耗时越短越好。
+Tester and test suites can be found in `FadeJson.ConsoleTests`
 
-.NET Framework 4.6 Release configuration to compile, Reading the same JSON files.
+### Performance
 
-Each test iteration 10 times and averaged, Units of milliseconds. Take the shorter the better.
+| Time Unit: ms              | FadeJSON | Jil  | JSON.NET | SimpleJson | jsonfx |
+| -------------------------- | -------- | ---- | -------- | ---------- | ------ |
+| `auctions.json`            | 7288     | 9213 | 15768    | 14872      | 60028  |
+| `data.json`                | 1093     | 1179 | 1284     | 1464       | 13875  |
+| `data1.json`               | 18       | 35   | 65       | 79         | 199    |
+| `SkipWhitespaceTest1.json` | 42       | 142  | 23       | 120        | 174    |
+| `TestObject.json`          | 38       | 69   | 97       | 161        | 608    |
+| `twitter.json`             | 105      | 113  | 153      | 286        | 1342   |
 
-#### 大文件 Big JSON file（3660KiB）
+### Parse Validation
 
-| FadeJson | Json.NET |
-| -------- | -------- |
-| 1257ms   | 1227ms   |
-| 1205ms   | 1220ms   |
-| 1209ms   | 1219ms   |
+Use `JSON_Checker` test suites to test whether the library can identify valid and invalid JSONs. `fail18.json` is excluded as depth of JSON is not specified.
 
-#### 小文件 Small JSON file（2KiB）
+|            | FadeJSON | Jil    | JSON.NET | ServiceStack.Text | SimpleJson | jsonfx |
+| ---------- | -------- | ------ | -------- | ----------------- | ---------- | ------ |
+| Passes     | 35/35    | 29/35  | 30/35    | 3/35              | 0/35       | 24/35  |
+| Percentage | 100%     | 82.66% | 85.71%   | 8.57%             | 0.00%      | 68.57% |
 
-| FadeJson | Json.NET |
-| -------- | -------- |
-| 8ms      | 41ms     |
-| 7ms      | 39ms     |
-| 8ms      | 43ms     |
+
+
+## License
+
+MIT License
