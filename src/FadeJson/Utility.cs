@@ -9,8 +9,8 @@ namespace FadeJSON
 
         [Conditional("DEBUG")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void AddLineNumber(char c) {
-            if (c == '\n') {
+        private static void AddLineNumber(char chr) {
+            if (chr == '\n') {
                 LineNumber++;
             }
         }

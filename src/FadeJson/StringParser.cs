@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -6,9 +6,9 @@ using System.Text;
 
 namespace FadeJSON
 {
-    internal class StreamParser : IDisposable
+    internal class StringParser : IDisposable
     {
-        private readonly StreamReader _reader;
+        private readonly StringReader _reader;
         private readonly char[] _buffer;
         private const int MaxBufferSize = 256;
 
@@ -34,19 +34,18 @@ namespace FadeJSON
             }
         }
 
-        public StreamParser(StreamReader reader) {
+        public StringParser(StringReader reader) {
             _reader = reader;
             _buffer = new char[MaxBufferSize];
             _reader.Read(_buffer, 0, MaxBufferSize);
         }
 
-        public StreamParser(string path) {
+        public StringParser(string content) {
             _buffer = new char[MaxBufferSize];
-            _reader = new StreamReader(new FileStream(path,
-                FileMode.Open, FileAccess.Read, FileShare.Read, 8192, FileOptions.SequentialScan));
+            _reader = new StringReader(content);
             _reader.Read(_buffer, 0, MaxBufferSize);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SkipWhitespace() {
             while (Pos + 1 < MaxBufferSize
@@ -94,25 +93,25 @@ namespace FadeJSON
         public uint ParseFastNumber(ref uint result) {
             var begin = Pos;
             while (Pos + 4 < MaxBufferSize
-                && _buffer[Pos].IsDigit()
-                && _buffer[Pos + 1].IsDigit()
-                && _buffer[Pos + 2].IsDigit()
-                && _buffer[Pos + 3].IsDigit()) {
+                   && _buffer[Pos].IsDigit()
+                   && _buffer[Pos + 1].IsDigit()
+                   && _buffer[Pos + 2].IsDigit()
+                   && _buffer[Pos + 3].IsDigit()) {
                 result = (uint)(_buffer[Pos] * 1000
-                    + _buffer[Pos + 1] * 100
-                    + _buffer[Pos + 2] * 10
-                    + _buffer[Pos + 3]
-                    - 53328
-                    + result * 10000);
+                                + _buffer[Pos + 1] * 100
+                                + _buffer[Pos + 2] * 10
+                                + _buffer[Pos + 3]
+                                - 53328
+                                + result * 10000);
                 Pos += 4;
             }
             while (Pos + 2 < MaxBufferSize
-                 && _buffer[Pos].IsDigit()
-                 && _buffer[Pos + 1].IsDigit()) {
+                   && _buffer[Pos].IsDigit()
+                   && _buffer[Pos + 1].IsDigit()) {
                 result = (uint)(_buffer[Pos] * 10
-                                 + _buffer[Pos + 1]
-                                 - 528
-                                 + result * 100);
+                                + _buffer[Pos + 1]
+                                - 528
+                                + result * 100);
                 Pos += 2;
             }
             while (Pos < MaxBufferSize && _buffer[Pos].IsDigit()) {

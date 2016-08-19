@@ -1,26 +1,30 @@
 # FadeJSON
 
-Micro and fast JSON library for .NET Platform.
+The fastest dynamic Deserialization JSON library in .NET Platform.
 
 
 
 ## Features
 
-- Micro. Binary library only 13KiB.
-- Easy to use.
-- Fast.
+- Lightweight. 6 files above, 13KiB after compilation.
+- Fast dynamic Deserialization.
+- Low memory usage. CLR GC-friendly.
 
-
-
-## Releases
-
-//TODO
 
 
 
 ## Getting Started
 
-//TODO
+[Binaries here](https://github.com/YangFan789/FadeJSON/releases)
+
+```c#
+var json = FadeJSON.Json.FromString("{\"key\":\"123\""}");
+var v = json["key"].Value; // v == 123
+```
+
+FadeJSON v4 **only** support  .NET Framework 4.6.
+
+If you are using other versions of .NET Framework, please using FadeJSON v3.
 
 
 
@@ -28,9 +32,13 @@ Micro and fast JSON library for .NET Platform.
 
 Tester and test suites can be found in `FadeJson.ConsoleTests`
 
-### Performance
+### Deserialization Performance
 
-| Time Unit: ms              | FadeJSON | Jil  | JSON.NET | SimpleJson | jsonfx |
+`NetJSON` is excluded because it doesn't support deserialization for dynamic object.
+
+Time Unit is millisecond. The lower the better.
+
+|                            | FadeJSON | Jil  | JSON.NET | SimpleJson | jsonfx |
 | -------------------------- | -------- | ---- | -------- | ---------- | ------ |
 | `auctions.json`            | 7288     | 9213 | 15768    | 14872      | 60028  |
 | `data.json`                | 1093     | 1179 | 1284     | 1464       | 13875  |

@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Json.cs" />
+    <Compile Include="Serializer.cs" />
+    <Compile Include="StringParser.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="JsonObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
