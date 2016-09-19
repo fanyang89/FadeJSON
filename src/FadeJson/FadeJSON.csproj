@@ -46,9 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonArray.cs" />
+    <Compile Include="Serialization\SerializationUtils.cs" />
+    <Compile Include="Serialization\Serializers\DefaultSerializer.cs" />
+    <Compile Include="Serialization\Serializers\DoubleSerializer.cs" />
+    <Compile Include="Serialization\Serializers\FloatSerializer.cs" />
+    <Compile Include="Serialization\Serializers\IntSerializer.cs" />
+    <Compile Include="Serialization\ISerialize.cs" />
     <Compile Include="Json.cs" />
-    <Compile Include="Serializer.cs" />
+    <Compile Include="JsonObjectType.cs" />
+    <Compile Include="Serialization\Serializers\LongSerializer.cs" />
+    <Compile Include="Serialization\Serializer.cs" />
+    <Compile Include="Serialization\SerializerCache.cs" />
     <Compile Include="StringParser.cs" />
+    <Compile Include="Serialization\Serializers\StringSerializer.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="JsonObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,21 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
 namespace FadeJSON
 {
-    public enum JsonObjectType
-    {
-        Null = 1,
-        Boolean,
-        Number,
-        String,
-        Object,
-        Array
-    }
-
-    public class JsonObject : IEquatable<JsonObject>
+    public class JsonObject : IEquatable<JsonObject>, IEnumerable<KeyValuePair<string, JsonObject>>
     {
         public readonly double Double;
         public readonly bool Boolean;
@@ -45,8 +36,15 @@ namespace FadeJSON
             }
         }
 
-        public JsonObject this[int index] => Array[index];
-        public JsonObject this[string key] => Object[key];
+        public JsonObject this[int index] {
+            get { return Array[index]; }
+            set { Array[index] = value; }
+        }
+
+        public JsonObject this[string key] {
+            get { return Object[key]; }
+            set { Object[key] = value; }
+        }
 
         #region ctor
 
@@ -59,6 +57,8 @@ namespace FadeJSON
             Object = objectValues;
             Type = JsonObjectType.Object;
         }
+
+        public JsonObject() : this(new Dictionary<string, JsonObject>()) { }
 
         public JsonObject(double value) {
             Double = value;
@@ -99,6 +99,38 @@ namespace FadeJSON
             }
         }
 
+        public void Add(string key, JsonObject value) {
+            Object.Add(key, value);
+        }
+
+        public IEnumerator<KeyValuePair<string, JsonObject>> GetEnumerator() {
+            return Object.GetEnumerator();
+        }
+
+        public static implicit operator JsonObject(int value) {
+            return new JsonObject(value);
+        }
+
+        public static implicit operator JsonObject(double value) {
+            return new JsonObject(value);
+        }
+
+        public static implicit operator JsonObject(bool value) {
+            return new JsonObject(value);
+        }
+
+        public static implicit operator JsonObject(string value) {
+            return new JsonObject(value);
+        }
+
+        public static implicit operator JsonObject(List<JsonObject> value) {
+            return new JsonObject(value);
+        }
+
+        public static implicit operator JsonObject(Dictionary<string, JsonObject> value) {
+            return new JsonObject(value);
+        }
+
         public override string ToString() {
             switch (Type) {
                 case JsonObjectType.Null:
@@ -106,7 +138,7 @@ namespace FadeJSON
                 case JsonObjectType.Boolean:
                     return Boolean ? "true" : "false";
                 case JsonObjectType.Number:
-                    return Double.ToString();
+                    return Double.ToString(CultureInfo.CurrentCulture);
                 case JsonObjectType.String:
                     return String;
                 case JsonObjectType.Object:
@@ -116,6 +148,10 @@ namespace FadeJSON
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
         }
     }
 }

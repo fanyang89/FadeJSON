@@ -40,12 +40,12 @@ namespace FadeJSON
             _reader.Read(_buffer, 0, MaxBufferSize);
         }
 
-        public StreamParser(string path) {
-            _buffer = new char[MaxBufferSize];
-            _reader = new StreamReader(new FileStream(path,
-                FileMode.Open, FileAccess.Read, FileShare.Read, 8192, FileOptions.SequentialScan));
-            _reader.Read(_buffer, 0, MaxBufferSize);
-        }
+        //public StreamParser(string path) {
+        //    _buffer = new char[MaxBufferSize];
+        //    _reader = new StreamReader(new FileStream(path,
+        //        FileMode.Open, FileAccess.Read, FileShare.Read, 8192, FileOptions.SequentialScan));
+        //    _reader.Read(_buffer, 0, MaxBufferSize);
+        //}
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SkipWhitespace() {
@@ -59,7 +59,7 @@ namespace FadeJSON
             }
         }
 
-        public JsonObject ParseObject() {
+        private JsonObject ParseObject() {
             Pos++; // skip '{'
             SkipWhitespace();
             var values = new Dictionary<string, JsonObject>();
@@ -91,7 +91,7 @@ namespace FadeJSON
         }
 
 
-        public uint ParseFastNumber(ref uint result) {
+        private uint ParseFastNumber(ref uint result) {
             var begin = Pos;
             while (Pos + 4 < MaxBufferSize
                 && _buffer[Pos].IsDigit()
@@ -123,31 +123,31 @@ namespace FadeJSON
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static uint GetUintLength(uint x) {
-            if (x == 0)
+        private static uint GetUintLength(uint i) {
+            if (i == 0)
                 return 0;
-            if (x >= 1 && x <= 9)
+            if (i >= 1 && i <= 9)
                 return 1;
-            if (x >= 10 && x <= 99)
+            if (i >= 10 && i <= 99)
                 return 2;
-            if (x >= 100 && x <= 999)
+            if (i >= 100 && i <= 999)
                 return 3;
-            if (x >= 1000 && x <= 9999)
+            if (i >= 1000 && i <= 9999)
                 return 4;
-            if (x >= 10000 && x <= 99999)
+            if (i >= 10000 && i <= 99999)
                 return 5;
-            if (x >= 100000 && x <= 999999)
+            if (i >= 100000 && i <= 999999)
                 return 6;
-            if (x >= 1000000 && x <= 9999999)
+            if (i >= 1000000 && i <= 9999999)
                 return 7;
-            if (x >= 10000000 && x <= 99999999)
+            if (i >= 10000000 && i <= 99999999)
                 return 8;
-            if (x >= 100000000 && x <= 999999999)
+            if (i >= 100000000 && i <= 999999999)
                 return 9;
             return 10;
         }
 
-        public double ParseDouble() {
+        private double ParseDouble() {
             uint part1 = 0;
             uint part2 = 0;
             var firstChar = Peek;
@@ -194,7 +194,7 @@ namespace FadeJSON
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public JsonObject ParseValue() {
+        private JsonObject ParseValue() {
             SkipWhitespace();
             var la = Peek;
             switch (la) {
@@ -338,7 +338,7 @@ namespace FadeJSON
             return sb.ToString();
         }
 
-        public JsonObject ParseArray() {
+      private JsonObject ParseArray() {
             Pos++; //skip '['
             SkipWhitespace();
             var list = new List<JsonObject>();
@@ -372,7 +372,7 @@ namespace FadeJSON
                     json = ParseArray();
                     break;
                 default:
-                    throw new FormatException("JSON entry must be a object or array.");
+                    throw new FormatException("JSON entry must be an object or array.");
             }
             SkipWhitespace();
             if (Peek != '\0') {

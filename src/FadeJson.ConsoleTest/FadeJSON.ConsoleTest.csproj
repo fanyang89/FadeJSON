@@ -47,16 +47,16 @@
       <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NetJSON, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetJSON.1.2.1.0\lib\net40\NetJSON.dll</HintPath>
+    <Reference Include="NetJSON, Version=1.2.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetJSON.1.2.1.2\lib\net40\NetJSON.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.62.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Text.4.0.62\lib\net40\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.5.0\lib\net45\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Sigil, Version=4.7.0.0, Culture=neutral, PublicKeyToken=2d06c3494341c8ab, processorArchitecture=MSIL">
@@ -74,9 +74,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -215,14 +215,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="lib\CodeTimer.dll" />
+    <Content Include="lib\CodeTimer.XML" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\FadeJson\FadeJSON.csproj">
       <Project>{2365bed1-a439-477c-96bd-711829d3d972}</Project>
       <Name>FadeJSON</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\CodeTimer.dll" />
-    <Content Include="lib\CodeTimer.XML" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

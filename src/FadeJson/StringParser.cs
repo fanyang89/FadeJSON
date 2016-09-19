@@ -8,31 +8,11 @@ namespace FadeJSON
 {
     internal class StringParser : IDisposable
     {
-        private readonly StringReader _reader;
-        private readonly char[] _buffer;
         private const int MaxBufferSize = 256;
+        private readonly char[] _buffer;
+        private readonly StringReader _reader;
 
         private uint _pos;
-
-        private uint Pos {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get {
-                return _pos;
-            }
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set {
-                if (value >= MaxBufferSize) {
-                    var rest = value % MaxBufferSize;
-                    var length = _reader.Read(_buffer, 0, MaxBufferSize);
-                    if (length < MaxBufferSize) {
-                        _buffer[length] = '\0';
-                    }
-                    _pos = rest;
-                } else {
-                    _pos = value;
-                }
-            }
-        }
 
         public StringParser(StringReader reader) {
             _reader = reader;
@@ -44,6 +24,32 @@ namespace FadeJSON
             _buffer = new char[MaxBufferSize];
             _reader = new StringReader(content);
             _reader.Read(_buffer, 0, MaxBufferSize);
+        }
+
+        private uint Pos {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return _pos; }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set {
+                if (value >= MaxBufferSize) {
+                    var rest = value%MaxBufferSize;
+                    var length = _reader.Read(_buffer, 0, MaxBufferSize);
+                    if (length < MaxBufferSize) {
+                        _buffer[length] = '\0';
+                    }
+                    _pos = rest;
+                }
+                else {
+                    _pos = value;
+                }
+            }
+        }
+
+        private char Peek {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return _buffer[Pos]; }
+        }
+
+        public void Dispose() {
+            _reader.Dispose();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -97,32 +103,32 @@ namespace FadeJSON
                    && _buffer[Pos + 1].IsDigit()
                    && _buffer[Pos + 2].IsDigit()
                    && _buffer[Pos + 3].IsDigit()) {
-                result = (uint)(_buffer[Pos] * 1000
-                                + _buffer[Pos + 1] * 100
-                                + _buffer[Pos + 2] * 10
-                                + _buffer[Pos + 3]
-                                - 53328
-                                + result * 10000);
+                result = (uint) (_buffer[Pos]*1000
+                                 + _buffer[Pos + 1]*100
+                                 + _buffer[Pos + 2]*10
+                                 + _buffer[Pos + 3]
+                                 - 53328
+                                 + result*10000);
                 Pos += 4;
             }
             while (Pos + 2 < MaxBufferSize
                    && _buffer[Pos].IsDigit()
                    && _buffer[Pos + 1].IsDigit()) {
-                result = (uint)(_buffer[Pos] * 10
-                                + _buffer[Pos + 1]
-                                - 528
-                                + result * 100);
+                result = (uint) (_buffer[Pos]*10
+                                 + _buffer[Pos + 1]
+                                 - 528
+                                 + result*100);
                 Pos += 2;
             }
             while (Pos < MaxBufferSize && _buffer[Pos].IsDigit()) {
-                result = (uint)(_buffer[Pos] - 48 + result * 10);
+                result = (uint) (_buffer[Pos] - 48 + result*10);
                 Pos++;
             }
             return Pos - begin;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static uint GetUintLength(uint x) {
+        private static uint GetUintLength(uint x) {
             if (x == 0)
                 return 0;
             if (x >= 1 && x <= 9)
@@ -161,7 +167,7 @@ namespace FadeJSON
             if (Peek == '.') {
                 Pos++;
                 var part2Length = ParseFastNumber(ref part2);
-                result += part2 * Math.Pow(10, -part2Length);
+                result += part2*Math.Pow(10, -part2Length);
             }
             if (Peek == 'e' || Peek == 'E') {
                 Pos++;
@@ -314,21 +320,27 @@ namespace FadeJSON
                     if (Peek == 'u') {
                         Pos++;
                         fixed (char* c = &_buffer[Pos]) {
-                            var r = (char)(HexToByte(*c) * 4096 + HexToByte(c[1]) * 256 + HexToByte(c[2]) * 16 + HexToByte(c[3]));
+                            var r =
+                                (char) (HexToByte(*c)*4096 + HexToByte(c[1])*256 + HexToByte(c[2])*16 + HexToByte(c[3]));
                             sb.Append(r);
                         }
                         Pos += 4;
-                    } else {
+                    }
+                    else {
                         sb.Append(EscapeChar(Peek));
                         Pos++;
                     }
-                } else if (Peek == '"') {
+                }
+                else if (Peek == '"') {
                     break;
-                } else if (Peek == '\n') {
+                }
+                else if (Peek == '\n') {
                     throw new FormatException("Hit \\n in a string literal.");
-                } else if (Peek == '\t') {
+                }
+                else if (Peek == '\t') {
                     throw new FormatException("Hit \\t in a string literal.");
-                } else {
+                }
+                else {
                     sb.Append(Peek);
                     Pos++;
                 }
@@ -378,17 +390,6 @@ namespace FadeJSON
                 throw new FormatException();
             }
             return json;
-        }
-
-        private char Peek {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get {
-                return _buffer[Pos];
-            }
-        }
-
-        public void Dispose() {
-            _reader.Dispose();
         }
     }
 }
